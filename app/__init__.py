@@ -12,6 +12,10 @@ from flask import Flask
 from .config import config
 
 
+# Application version; should match Git tags and docker tags
+__version__ = '0.1.0-rc.1'
+
+
 def create_app(profile='production'):
     """Create a Flask application instance.
 

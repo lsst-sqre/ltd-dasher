@@ -7,3 +7,4 @@ api = Blueprint('api', __name__)
 
 from . import build  # noqa: F401,E402
 from . import healthz  # noqa: F401,E402
+from . import root  # noqa: F401,E402
