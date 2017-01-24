@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: dasher-deployment
+
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: dasher
+    spec:
+      containers:
+        - name: uwsgi
+          imagePullPolicy: "Always"
+          image: "lsstsqre/ltd-dasher:latest"
+          ports:
+            - containerPort: 3031
+              name: dasher
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: dasher
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          env:
+            - name: LTD_DASHER_PROFILE
+              value: production

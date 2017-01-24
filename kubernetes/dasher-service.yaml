@@ -1,0 +1,29 @@
+# Service to front dasher pods
+#
+# See http://kubernetes.io/docs/user-guide/services/
+#
+# This Service provides an internal cluster IP:
+# http://dasher:3031 or
+# https://dasher-service.default.svc.cluster.local
+# (https://kubernetes.io/docs/user-guide/services/#dns)
+#
+# or environment variables:
+# - DASHER_SERVICE_HOST
+# - DASHER_SERVICE_PORT
+# (https://kubernetes.io/docs/user-guide/services/#environment-variables)
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: dasher
+  labels:
+    name: dasher
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 3031
+      targetPort: dasher
+      protocol: TCP
+  selector:
+    name: dasher
