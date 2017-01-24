@@ -9,6 +9,91 @@ For more information about LSST the Docs' versioned documentation, see `SQR-006`
 
 LTD Dasher is a Kubernetes-deployed microservice that works with `LTD Keeper`_.
 
+Local development
+=================
+
+In a Python 3.5 virtual environment, install requirements::
+
+   pip install -r requirements.txt
+
+Run a development server::
+
+   ./run.py runserver
+
+Run unit tests::
+
+   py.test --flake8 --cov=app
+
+Making Docker images
+====================
+
+Build::
+
+   docker build -t lsstsqre/ltd-dasher .
+
+**Note:** for *releases*, the image's **tag** should match both the Git tag and ``app.__version__``.
+We need to work out the continuous delivery pipeline.
+
+Push to `lsstsqre/ltd-dasher <https://hub.docker.com/r/lsstsqre/ltd-dasher/>`_ on Docker Hub::
+
+   docker push lsstsqre/ltd-dasher
+
+Kubernetes deployment
+=====================
+
+LTD Dasher needs to be deployed in the same Kubernetes cluster as `LTD Keeper`_; Dasher isn't meant to have a world-facing endpoint.
+The basic deployment is::
+
+   cd kubernetes
+   kubectl create -f dasher-service.yaml
+   kubectl create -f dasher-deployment.yaml
+
+Through the ``dasher`` service, the application is available in the cluster at::
+
+   http://dasher:3031/
+
+HTTP API reference
+==================
+
+GET /
+-----
+
+Returns basic metadata about the service.
+Example::
+
+   HTTP/1.0 200 OK
+   Content-Length: 91
+   Content-Type: application/json
+   Date: Tue, 24 Jan 2017 17:32:47 GMT
+   Server: Werkzeug/0.11.15 Python/3.5.2
+
+   {
+       "dasher_version": "0.1.0-rc.1",
+       "repo": "https://github.com/lsst-sqre/ltd-dasher"
+   }
+
+GET /healthz
+------------
+
+Endpoint for a liveness probe (see ``kubernetes/dasher-deployment.yaml``).
+Example::
+
+   HTTP/1.0 200 OK
+   Content-Length: 21
+   Content-Type: application/json
+   Date: Tue, 24 Jan 2017 17:34:30 GMT
+   Server: Werkzeug/0.11.15 Python/3.5.2
+
+   {
+       "status": "ok"
+   }
+
+POST /build
+-----------
+
+Triggers a dashboard build.
+This route is not yet implemented.
+
 ****
 
 Copyright 2017 Association of Universities for Research in Astronomy, Inc.
