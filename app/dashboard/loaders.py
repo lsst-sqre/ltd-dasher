@@ -1,5 +1,8 @@
 """Dashboard build pipeline."""
 
+import os
+import json
+
 import requests
 
 
@@ -88,3 +91,41 @@ def load_build_data(product_url):
         build_data[build_object['slug']] = build_object
 
     return build_data
+
+
+def _cache_path(cache_dir, product_slug, dataset_type):
+    assert dataset_type in ('product', 'editions', 'builds')
+    name = '{product}_{dataset_type}'.format(product=product_slug,
+                                             dataset_type=dataset_type)
+    cache_path = os.path.join(cache_dir, name) + '.json'
+    return cache_path
+
+
+def cache_data_for_dev(json_data, cache_dir, product_slug, dataset_type):
+    if not os.path.isdir(cache_dir):
+        os.makedirs(cache_dir, exist_ok=True)
+    cache_path = _cache_path(cache_dir, product_slug, dataset_type)
+    with open(cache_path, 'w') as f:
+        json.dump(json_data, f, indent=2, sort_keys=True)
+
+
+def load_dataset_with_caching(cache_dir, product_slug, dataset_type):
+    cache_path = _cache_path(cache_dir, product_slug, dataset_type)
+    try:
+        with open(cache_path, 'r') as f:
+            cache_data = json.load(f, encoding='utf-8')
+    except OSError:
+        # Can't find cached data, so reload it
+        product_url = 'https://keeper.lsst.codes/products/{slug}'.format(
+            slug=product_slug)
+        if dataset_type == 'product':
+            cache_data = load_product_data(product_url)
+        elif dataset_type == 'editions':
+            cache_data = load_edition_data(product_url)
+        elif dataset_type == 'builds':
+            cache_data = load_build_data(product_url)
+        else:
+            raise RuntimeError(
+                'Unknown dataset_type: {0}'.format(dataset_type))
+        cache_data_for_dev(cache_data, cache_dir, product_slug, dataset_type)
+    return cache_data

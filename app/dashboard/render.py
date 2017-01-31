@@ -100,3 +100,25 @@ def _insert_age(dataset,
 
 def _parse_keeper_datetime(date_string):
     return datetime.datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%SZ')
+
+
+def render_development_index():
+    """Render an index.html document for the root of the development builds.
+    """
+    template_dir = os.path.join(os.path.dirname(__file__), 'templates')
+    env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(template_dir),
+        autoescape=jinja2.select_autoescape(['html'])
+    )
+    template = env.get_template('dev_index.jinja')
+    rendered_page = template.render()
+    return rendered_page
+
+
+def write_html(page_data, path):
+    """Write a rendered HTML template to the file system (for development)."""
+    dirname = os.path.dirname(path)
+    if dirname is not '' and not os.path.isdir(dirname):
+        os.makedirs(dirname, exist_ok=True)
+    with open(path, 'w') as f:
+        f.write(page_data)

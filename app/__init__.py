@@ -10,6 +10,7 @@ Copyright 2014 Miguel Grinberg.
 from flask import Flask
 
 from .config import config
+from . import dashboard  # noqa: F401
 
 
 # Application version; should match Git tags and docker tags
