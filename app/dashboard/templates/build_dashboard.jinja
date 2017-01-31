@@ -1,0 +1,19 @@
+{% extends "base.jinja" %}
+
+{% block page_title %}{{ product.title }}: LSST the Docs Builds{% endblock page_title %}
+{% block page_description %}Build dashboard for {{ product.published_url }}.{% endblock page_description %}
+
+{% block body %}
+<h1>{{ product.title }}</h1>
+
+<p>Builds</p>
+
+{% if builds %}
+<ul>
+  {% for item in builds %}
+  <li>{% include "_build_item.jinja" %}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock body %}

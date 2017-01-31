@@ -1,0 +1,41 @@
+{% extends "base.jinja" %}
+
+{% block page_title %}{{ product.title }}: LSST the Docs Editions{% endblock page_title %}
+{% block page_description %}Edition dashboard for {{ product.published_url }}.{% endblock page_description %}
+
+{% block body %}
+<h1>{{ product.title }}</h1>
+
+<p>Editions</p>
+
+{% if releases %}
+<h2>Releases</h2>
+
+<ul>
+  {% for item in releases %}
+  <li>{% include "_edition_item.jinja" %}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if recents %}
+<h2>Recent development editions</h2>
+
+<ul>
+  {% for item in recents %}
+  <li>{% include "_edition_item.jinja" %}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if stales %}
+<h2>Stale development editions</h2>
+
+<ul>
+  {% for item in stales %}
+  <li>{% include "_edition_item.jinja" %}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock body %}
