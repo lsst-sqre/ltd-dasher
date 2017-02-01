@@ -16,6 +16,24 @@ In a Python 3.5 virtual environment, install requirements::
 
    pip install -r requirements.txt
 
+Installing ``npm`` and ``gulp`` if they're not already installed.
+For example::
+
+   brew install node
+   npm install -g gulp
+
+And install LTD Dasher's node.js dependencies::
+
+   npm install
+
+Generate a dashboard for development (written to ``_build``)::
+
+   ./run.py render
+
+Clean up the development render::
+
+   ./run.py clean
+
 Run a development server::
 
    ./run.py runserver

@@ -88,5 +88,7 @@ ENV/
 # Rope project settings
 .ropeproject
 
-# Development testing directory
+# LTD Dasher-specific stuff
 _build
+node_modules
+app/dashboard/assets/
