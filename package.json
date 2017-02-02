@@ -32,5 +32,8 @@
     "gulp-sourcemaps": "^2.4.0",
     "gulp-util": "^3.0.8",
     "minimist": "^1.2.0"
+  },
+  "dependencies": {
+    "normalize-scss": "^6.0.0"
   }
 }

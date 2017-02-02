@@ -24,6 +24,11 @@ const dirs = {
   dev: '_build',
 };
 
+// sass modules installed via npm; these are added to node-sass's search paths.
+const sassIncludes = [
+  'node_modules/normalize-scss/sass'
+];
+
 // force page reload
 function reload() {
   if (server) {
@@ -40,7 +45,7 @@ gulp.task('environment', () => console.log(`${env}`));
 gulp.task('scss', () => {
   return gulp.src(`${dirs.scss}/app.scss`)
     .pipe(env === 'dev' ? sourcemaps.init() : gutil.noop())
-    .pipe(sass.sync().on('error', sass.logError))
+    .pipe(sass.sync({ includePaths: sassIncludes }).on('error', sass.logError))
     .pipe(autoprefixer())
     .pipe(env === 'dev' ? sourcemaps.write() : gutil.noop())
     .pipe(env === 'deploy' ? minifyCss() : gutil.noop())
