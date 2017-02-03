@@ -1,7 +1,22 @@
-@import "normalize";
+// app.scss
+//
+// This main Sass file imports all partials and is compiled into the single
+// CSS dependency for our HTML.
+//
+// This project uses an atomic design architecture.
 
+// normalize =================================================================
+@import 'normalize';
 @include normalize;
 
-html {
-  color: #444;
-}
+// Principles ================================================================
+// Variables and mixins to support quarks/atoms/molecules
+
+// Quarks ====================================================================
+// Default styling for base html elements
+
+// Atoms =====================================================================
+// Portable classes that style individual elements
+
+// Molecules =================================================================
+// Classes that implement design patterns by combining atoms
