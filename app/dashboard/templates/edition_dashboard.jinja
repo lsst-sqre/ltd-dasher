@@ -4,38 +4,57 @@
 {% block page_description %}Edition dashboard for {{ product.published_url }}.{% endblock page_description %}
 
 {% block body %}
-<h1>{{ product.title }}</h1>
 
-<p>Editions</p>
+<div class="dashboard-container">
 
-{% if releases %}
-<h2>Releases</h2>
+  <header class="dashboard-header">
+    <h1 class="dashboard-header__product-name">{{ product.title }}</h1>
 
-<ul>
-  {% for item in releases %}
-  <li>{% include "_edition_item.jinja" %}</li>
-  {% endfor %}
-</ul>
-{% endif %}
+    <p class="dashboard-header__subtitle">Editions</p>
+  </header>
 
-{% if recents %}
-<h2>Recent development editions</h2>
 
-<ul>
-  {% for item in recents %}
-  <li>{% include "_edition_item.jinja" %}</li>
-  {% endfor %}
-</ul>
-{% endif %}
+  {% if releases %}
+  <section class="dashboard-section">
+    <header class="dashboard-section__header">
+      <h2 class="dashboard-section__title">Releases</h2>
+    </header>
 
-{% if stales %}
-<h2>Stale development editions</h2>
+    <ul class="inventory-list">
+      {% for item in releases %}
+      <li class="inventory-list__item">{% include "_edition_item.jinja" %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
 
-<ul>
-  {% for item in stales %}
-  <li>{% include "_edition_item.jinja" %}</li>
-  {% endfor %}
-</ul>
-{% endif %}
+  {% if recents %}
+  <section class="dashboard-section">
+    <header class="dashboard-section__header">
+      <h2 class="dashboard-section__title">Recent development editions</h2>
+    </header>
 
+    <ul class="inventory-list">
+      {% for item in recents %}
+      <li class="inventory-list__item">{% include "_edition_item.jinja" %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if stales %}
+  <section class="dashboard-section">
+    <header class="dashboard-section__header">
+      <h2 class="dashboard-section__title">Stale development editions</h2>
+    </header>
+
+    <ul class="inventory-list">
+      {% for item in stales %}
+      <li class="inventory-list__item">{% include "_edition_item.jinja" %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+</div>
 {% endblock body %}

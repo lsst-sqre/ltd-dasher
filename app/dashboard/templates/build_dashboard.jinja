@@ -4,16 +4,23 @@
 {% block page_description %}Build dashboard for {{ product.published_url }}.{% endblock page_description %}
 
 {% block body %}
-<h1>{{ product.title }}</h1>
 
-<p>Builds</p>
+<div class="dashboard-container">
 
-{% if builds %}
-<ul>
-  {% for item in builds %}
-  <li>{% include "_build_item.jinja" %}</li>
-  {% endfor %}
-</ul>
-{% endif %}
+  <header class="dashboard-header">
+    <h1 class="dashboard-header__product-name">{{ product.title }}</h1>
+
+    <p class="dashboard-header__subtitle">Builds</p>
+  </header>
+
+  {% if builds %}
+  <ul class="inventory-list">
+    {% for item in builds %}
+    <li class="inventory-list__item">{% include "_build_item.jinja" %}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+</div>
 
 {% endblock body %}
