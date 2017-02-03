@@ -26,7 +26,8 @@ const dirs = {
 
 // sass modules installed via npm; these are added to node-sass's search paths.
 const sassIncludes = [
-  'node_modules/normalize-scss/sass'
+  'node_modules/normalize-scss/sass',
+  'node_modules/sass-math-pow/sass/'
 ];
 
 // force page reload

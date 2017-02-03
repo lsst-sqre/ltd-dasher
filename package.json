@@ -34,6 +34,7 @@
     "minimist": "^1.2.0"
   },
   "dependencies": {
-    "normalize-scss": "^6.0.0"
+    "normalize-scss": "^6.0.0",
+    "sass-math-pow": "^0.1.3"
   }
 }
