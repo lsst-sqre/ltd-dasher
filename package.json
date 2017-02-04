@@ -34,7 +34,9 @@
     "minimist": "^1.2.0"
   },
   "dependencies": {
+    "inuitcss": "^6.0.0-beta.4",
     "normalize-scss": "^6.0.0",
-    "sass-math-pow": "^0.1.3"
+    "sass-math-pow": "^0.1.3",
+    "sass-mq": "^3.3.2"
   }
 }
