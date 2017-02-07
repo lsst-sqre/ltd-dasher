@@ -1,15 +1,18 @@
 """Routes at ``/build`` that implement dashboard builds."""
 
-from flask import jsonify
+from flask import jsonify, request, current_app
 from . import api
+from ..worker import build_dashboard_for_product
 
 
 @api.route('/build', methods=['POST'])
 def build_dashboards():
-    """Build dashboard(s), triggering one celery task per product.
+    """Build dashboard(s).
 
     :statuscode 202: Dashboard rebuild trigger sent.
     """
+    for product_resource_url in request.json['product_urls']:
+        build_dashboard_for_product(product_resource_url, current_app.config)
 
-    # TODO provide a status endpoint in the Location header
+    # Ideally we'd provide a status endpoint, and put that URL in the header
     return jsonify({}), 202, {}
