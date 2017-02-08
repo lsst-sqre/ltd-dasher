@@ -21,8 +21,11 @@ def render_edition_dashboard(product_data, edition_data):
     # The main edition is always a release; label it as 'Current' for
     # template presentation.
     # More work should be done on how LTD designates releases.
-    releases = [edition_data['main']]
-    releases[0]['alt_title'] = 'Current'
+    if 'main' in edition_data:
+        releases = [edition_data['main']]
+        releases[0]['alt_title'] = 'Current'
+    else:
+        releases = []
     release_slugs = [r['slug'] for r in releases]
 
     # Extract recently-updated editions
@@ -81,7 +84,7 @@ def _insert_datetime(dataset,
     """
     for k, d in dataset.items():
         d[datetime_key] = _parse_keeper_datetime(d[datetime_str_key])
-    return d
+    return dataset
 
 
 def _insert_age(dataset,
@@ -95,7 +98,7 @@ def _insert_age(dataset,
     for k, d in dataset.items():
         dt = _parse_keeper_datetime(d[datetime_str_key])
         d[age_key] = datetime.datetime.now() - dt
-    return d
+    return dataset
 
 
 def _parse_keeper_datetime(date_string):
