@@ -14,6 +14,11 @@ class Config(object):
 
     DEBUG = False
 
+    AWS_ID = os.getenv('LTD_DASHER_AWS_ID')
+    AWS_SECRET = os.getenv('LTD_DASHER_AWS_SECRET')
+    FASTLY_KEY = os.getenv('LTD_DASHER_FASTLY_KEY')
+    FASTLY_SERVICE_ID = os.getenv('LTD_DASHER_FASTLY_ID')
+
     @abc.abstractclassmethod
     def init_app(cls, app):
         """Initialization hook called during create_app that subclasses
