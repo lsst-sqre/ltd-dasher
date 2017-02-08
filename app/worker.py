@@ -64,7 +64,7 @@ def build_dashboard_for_product(product_url, config):
 
 
 def upload_static_assets(product_data, config):
-    """Upload all static assets included in ``app/assets/manifest.yaml`` to S3.
+    """Upload all static assets included in ``app/assets`` to S3.
 
     Parameters
     ----------
@@ -76,11 +76,30 @@ def upload_static_assets(product_data, config):
 
     Notes
     -----
-    The YAML manifest file is designed to ensure that compiled static assets
-    are included in the application container, since they are not embedded in
-    Git in their compiled form.
+    The contents of ``app/assets`` are not commited in Git since they are
+    compiled by the Gulp workflow. It would be good to script the Docker
+    image build process to ensure that asserts and compiled and installed.
     """
-    pass
+    # local filesystem path
+    package_assets_dir = os.path.join(os.path.dirname(__file__),
+                                      'dashboard', 'assets')
+    print('package_assets_dir', package_assets_dir)
+    assert os.path.isdir(package_assets_dir)
+
+    # path to the assets directory in the bucket
+    bucket_path_prefix = os.path.join(product_data['slug'], '_dasher-assets')
+
+    print('assets bucket_path_prefix', bucket_path_prefix)
+    upload_dir(product_data['bucket_name'],
+               bucket_path_prefix,
+               package_assets_dir,
+               upload_dir_redirect_objects=True,
+               surrogate_key=product_data['surrogate_key'],
+               surrogate_control='max-age=31536000',
+               cache_control='no-cache',
+               acl='public-read',
+               aws_access_key_id=config['AWS_ID'],
+               aws_secret_access_key=config['AWS_SECRET'])
 
 
 def upload_html_data(html_data, relative_path, product_data, config):
