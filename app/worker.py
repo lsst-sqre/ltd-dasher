@@ -1,7 +1,15 @@
 """Worker functions to handle dashboard builds."""
 
-from .loaders import load_product_data, load_edition_data, load_build_data
-from .render import render_edition_dashboard, render_build_dashboard
+import os
+
+import boto3
+from ltdconveyor import (upload_dir, upload_object,
+                         create_dir_redirect_object, purge_key)
+
+from .dashboard.loaders import (load_product_data, load_edition_data,
+                                load_build_data)
+from .dashboard.render import (render_edition_dashboard,
+                               render_build_dashboard)
 
 
 def build_dashboard_for_product(product_url, config):
@@ -19,12 +27,20 @@ def build_dashboard_for_product(product_url, config):
     config : `flask.config`
         Flask configuration.
     """
+    # Sanity check that configs exist
+    assert config['AWS_ID'] is not None
+    assert config['AWS_SECRET'] is not None
+    assert config['FASTLY_KEY'] is not None
+    assert config['FASTLY_SERVICE_ID'] is not None
+
     # Get data from the Keeper API
     product_data = load_product_data(product_url)
     edition_data = load_edition_data(product_url)
     build_data = load_build_data(product_url)
 
-    # Turn data into HTML dashboars for editions and builds
+    print("product_data\n", product_data)
+
+    # Turn data into HTML dashboards for editions and builds
     edition_html_data = render_edition_dashboard(product_data, edition_data)
     build_html_data = render_build_dashboard(product_data, build_data)
 
@@ -40,6 +56,11 @@ def build_dashboard_for_product(product_url, config):
                      'builds/index.html',
                      product_data,
                      config)
+
+    # Purge fastly cache
+    purge_key(product_data['surrogate_key'],
+              config['FASTLY_SERVICE_ID'],
+              config['FASTLY_KEY'])
 
 
 def upload_static_assets(product_data, config):
@@ -77,4 +98,41 @@ def upload_html_data(html_data, relative_path, product_data, config):
     config : `flask.config`
         Flask configuration.
     """
-    pass
+    surrogate_key = product_data['surrogate_key']
+
+    if not relative_path.startswith('/'):
+        relative_path = '/' + relative_path
+    bucket_path = product_data['slug'] + relative_path
+
+    product_data['bucket_name']
+
+    session = boto3.session.Session(
+        aws_access_key_id=config['AWS_ID'],
+        aws_secret_access_key=config['AWS_SECRET'])
+    s3 = session.resource('s3')
+    bucket = s3.Bucket(product_data['bucket_name'])
+
+    # Have Fastly cache the dashboard for a year (or until purged)
+    metadata = {'surrogate-key': surrogate_key,
+                'surrogate-control': 'max-age=31536000'}
+    acl = 'public-read'
+    # Have the *browser* never cache the dashboard
+    cache_control = 'no-cache'
+
+    # Upload HTML object
+    print('html bucket_path', bucket_path)
+    upload_object(bucket_path,
+                  bucket,
+                  content=html_data,
+                  metadata=metadata,
+                  acl=acl,
+                  cache_control=cache_control,
+                  content_type='text/html')
+
+    # Upload directory redirect object
+    bucket_dir_path = os.path.dirname(bucket_path)
+    print("html bucket_dir_path", bucket_dir_path)
+    create_dir_redirect_object(bucket_dir_path, bucket,
+                               metadata=metadata,
+                               acl=acl,
+                               cache_control=cache_control)
