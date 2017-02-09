@@ -40,9 +40,14 @@ def build_dashboard_for_product(product_url, config):
 
     print("product_data\n", product_data)
 
+    # absolute URL for asset directory
+    asset_dir = product_data['published_url'] + '/_dasher-assets'
+
     # Turn data into HTML dashboards for editions and builds
-    edition_html_data = render_edition_dashboard(product_data, edition_data)
-    build_html_data = render_build_dashboard(product_data, build_data)
+    edition_html_data = render_edition_dashboard(
+        product_data, edition_data, asset_dir=asset_dir)
+    build_html_data = render_build_dashboard(
+        product_data, build_data, asset_dir=asset_dir)
 
     # Upload static assets
     upload_static_assets(product_data, config)

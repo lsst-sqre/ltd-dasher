@@ -6,7 +6,8 @@ import datetime
 import jinja2
 
 
-def render_edition_dashboard(product_data, edition_data):
+def render_edition_dashboard(product_data, edition_data,
+                             asset_dir='/_dasher-assets'):
     """Render the edition template with data."""
     template_dir = os.path.join(os.path.dirname(__file__), 'templates')
     env = jinja2.Environment(
@@ -47,6 +48,7 @@ def render_edition_dashboard(product_data, edition_data):
 
     template = env.get_template('edition_dashboard.jinja')
     rendered_page = template.render(
+        asset_dir=asset_dir,
         product=product_data,
         releases=releases,
         recents=recents,
@@ -54,7 +56,8 @@ def render_edition_dashboard(product_data, edition_data):
     return rendered_page
 
 
-def render_build_dashboard(product_data, build_data):
+def render_build_dashboard(product_data, build_data,
+                           asset_dir='/_dasher-assets'):
     """Render the builds template with data."""
     template_dir = os.path.join(os.path.dirname(__file__), 'templates')
     env = jinja2.Environment(
@@ -70,6 +73,7 @@ def render_build_dashboard(product_data, build_data):
     builds.sort(key=lambda x: x['age'])
     template = env.get_template('build_dashboard.jinja')
     rendered_page = template.render(
+        asset_dir=asset_dir,
         product=product_data,
         builds=builds)
     return rendered_page
