@@ -17,6 +17,7 @@ class Config(object):
     __metaclass__ = abc.ABCMeta
 
     DEBUG = False
+    TESTING = False
 
     AWS_ID = os.getenv('LTD_DASHER_AWS_ID')
     AWS_SECRET = os.getenv('LTD_DASHER_AWS_SECRET')
@@ -67,6 +68,12 @@ class DevelopmentConfig(Config):
 
 class TestConfig(Config):
     """Test configuration (for py.test harness)."""
+
+    TESTING = True
+    AWS_ID = "aws_test_id"
+    AWS_SECRET = "aws_test_secret"
+    FASTLY_KEY = "fastly_test_key"
+    FASTLY_SERVICE_ID = "fastly_test_id"
 
     @classmethod
     def init_app(cls, app):

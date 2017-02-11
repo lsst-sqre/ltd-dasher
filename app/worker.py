@@ -57,21 +57,25 @@ def build_dashboard_for_product(product_url, config):
     upload_static_assets(product_data, config)
 
     # Upload dashboards
-    upload_html_data(edition_html_data,
-                     'v/index.html',
-                     product_data,
-                     config)
-    upload_html_data(build_html_data,
-                     'builds/index.html',
-                     product_data,
-                     config)
+    if config['TESTING'] is False:
+        # FIXME really want to mock these instead of flagging
+        upload_html_data(edition_html_data,
+                         'v/index.html',
+                         product_data,
+                         config)
+        upload_html_data(build_html_data,
+                         'builds/index.html',
+                         product_data,
+                         config)
 
     # Purge fastly cache
-    purge_key(product_data['surrogate_key'],
-              config['FASTLY_SERVICE_ID'],
-              config['FASTLY_KEY'])
-    logger.info("Fastly purge_key",
-                surrogate_key=product_data['surrogate_key'])
+    if config['TESTING'] is False:
+        # FIXME really want to mock this instead of flagging
+        purge_key(product_data['surrogate_key'],
+                  config['FASTLY_SERVICE_ID'],
+                  config['FASTLY_KEY'])
+        logger.info("Fastly purge_key",
+                    surrogate_key=product_data['surrogate_key'])
 
 
 def upload_static_assets(product_data, config):
@@ -103,17 +107,19 @@ def upload_static_assets(product_data, config):
     # path to the assets directory in the bucket
     bucket_path_prefix = os.path.join(product_data['slug'], '_dasher-assets')
 
-    logger.debug('assets bucket_path_prefix', bucket_path_prefix)
-    upload_dir(product_data['bucket_name'],
-               bucket_path_prefix,
-               package_assets_dir,
-               upload_dir_redirect_objects=True,
-               surrogate_key=product_data['surrogate_key'],
-               surrogate_control='max-age=31536000',
-               cache_control='no-cache',
-               acl='public-read',
-               aws_access_key_id=config['AWS_ID'],
-               aws_secret_access_key=config['AWS_SECRET'])
+    if config['TESTING'] is False:
+        # FIXME really want to mock upload_dir instead of flagging it
+        logger.debug(assets_bucket_path_prefix=bucket_path_prefix)
+        upload_dir(product_data['bucket_name'],
+                   bucket_path_prefix,
+                   package_assets_dir,
+                   upload_dir_redirect_objects=True,
+                   surrogate_key=product_data['surrogate_key'],
+                   surrogate_control='max-age=31536000',
+                   cache_control='no-cache',
+                   acl='public-read',
+                   aws_access_key_id=config['AWS_ID'],
+                   aws_secret_access_key=config['AWS_SECRET'])
 
 
 def upload_html_data(html_data, relative_path, product_data, config):
