@@ -3,6 +3,7 @@
 import os
 
 import boto3
+from structlog import get_logger
 from ltdconveyor import (upload_dir, upload_object,
                          create_dir_redirect_object, purge_key)
 
@@ -27,6 +28,9 @@ def build_dashboard_for_product(product_url, config):
     config : `flask.config`
         Flask configuration.
     """
+    logger = get_logger()
+    logger.debug('build_dashboard_for_product', product_url=product_url)
+
     # Sanity check that configs exist
     assert config['AWS_ID'] is not None
     assert config['AWS_SECRET'] is not None
@@ -38,14 +42,14 @@ def build_dashboard_for_product(product_url, config):
     edition_data = load_edition_data(product_url)
     build_data = load_build_data(product_url)
 
-    print("product_data\n", product_data)
-
     # absolute URL for asset directory
     asset_dir = product_data['published_url'] + '/_dasher-assets'
 
     # Turn data into HTML dashboards for editions and builds
+    logger.debug("rendering edition_html_data")
     edition_html_data = render_edition_dashboard(
         product_data, edition_data, asset_dir=asset_dir)
+    logger.debug("rendering build_html_data")
     build_html_data = render_build_dashboard(
         product_data, build_data, asset_dir=asset_dir)
 
@@ -66,6 +70,8 @@ def build_dashboard_for_product(product_url, config):
     purge_key(product_data['surrogate_key'],
               config['FASTLY_SERVICE_ID'],
               config['FASTLY_KEY'])
+    logger.info("Fastly purge_key",
+                surrogate_key=product_data['surrogate_key'])
 
 
 def upload_static_assets(product_data, config):
@@ -85,16 +91,19 @@ def upload_static_assets(product_data, config):
     compiled by the Gulp workflow. It would be good to script the Docker
     image build process to ensure that asserts and compiled and installed.
     """
+    logger = get_logger()
+    logger.debug("upload_static_assets")
+
     # local filesystem path
     package_assets_dir = os.path.join(os.path.dirname(__file__),
                                       'dashboard', 'assets')
-    print('package_assets_dir', package_assets_dir)
+    logger.debug(package_assets_dir=package_assets_dir)
     assert os.path.isdir(package_assets_dir)
 
     # path to the assets directory in the bucket
     bucket_path_prefix = os.path.join(product_data['slug'], '_dasher-assets')
 
-    print('assets bucket_path_prefix', bucket_path_prefix)
+    logger.debug('assets bucket_path_prefix', bucket_path_prefix)
     upload_dir(product_data['bucket_name'],
                bucket_path_prefix,
                package_assets_dir,
@@ -122,6 +131,9 @@ def upload_html_data(html_data, relative_path, product_data, config):
     config : `flask.config`
         Flask configuration.
     """
+    logger = get_logger()
+    logger.debug('upload_html_data', upload_path=relative_path)
+
     surrogate_key = product_data['surrogate_key']
 
     if not relative_path.startswith('/'):
@@ -144,7 +156,6 @@ def upload_html_data(html_data, relative_path, product_data, config):
     cache_control = 'no-cache'
 
     # Upload HTML object
-    print('html bucket_path', bucket_path)
     upload_object(bucket_path,
                   bucket,
                   content=html_data,
@@ -155,7 +166,6 @@ def upload_html_data(html_data, relative_path, product_data, config):
 
     # Upload directory redirect object
     bucket_dir_path = os.path.dirname(bucket_path)
-    print("html bucket_dir_path", bucket_dir_path)
     create_dir_redirect_object(bucket_dir_path, bucket,
                                metadata=metadata,
                                acl=acl,

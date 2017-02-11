@@ -4,6 +4,7 @@ import os
 import json
 
 import requests
+from structlog import get_logger
 
 
 def load_product_data(product_url):
@@ -32,6 +33,8 @@ def load_product_data(product_url):
     #     "slug": "developer",
     #     "title": "DM Developer Guide"
     # }
+    logger = get_logger()
+    logger = logger.debug('load_product_data')
     r = requests.get(product_url)
     return r.json()
 
@@ -52,6 +55,9 @@ def load_edition_data(product_url):
         Dictionary keyed by edition slug, containing `dict`\ s of edition
         data.
     """
+    logger = get_logger()
+    logger = logger.debug('load_edition_data')
+
     edition_root_url = product_url + '/editions/'
     r = requests.get(edition_root_url)
     edition_urls = r.json()['editions']
@@ -80,6 +86,9 @@ def load_edition_data(product_url):
 
 
 def load_build_data(product_url):
+    logger = get_logger()
+    logger = logger.debug('load_build_data')
+
     build_root_url = product_url + '/builds/'
     r = requests.get(build_root_url)
     build_urls = r.json()['builds']

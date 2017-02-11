@@ -2,10 +2,12 @@
 
 from flask import jsonify, request, current_app
 from . import api
+from .logging import log_route
 from ..worker import build_dashboard_for_product
 
 
 @api.route('/build', methods=['POST'])
+@log_route
 def build_dashboards():
     """Build dashboard(s).
 

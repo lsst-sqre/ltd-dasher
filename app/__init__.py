@@ -8,6 +8,7 @@ Copyright 2014 Miguel Grinberg.
 """
 
 from flask import Flask
+from structlog import get_logger
 
 from .config import config
 from . import dashboard  # noqa: F401
@@ -26,7 +27,11 @@ def create_app(profile='production'):
 
     # apply configuration
     app.config.from_object(config[profile])
+    # init_app configuration hook is used for logging/structlog setup
     config[profile].init_app(app)
+
+    logger = get_logger()
+    logger.debug('Starting LTD Dasher')
 
     # register blueprints
     from .routes import api as api_blueprint

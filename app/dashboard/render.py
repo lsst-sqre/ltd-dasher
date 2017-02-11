@@ -3,12 +3,16 @@
 import os
 import datetime
 
+from structlog import get_logger
 import jinja2
 
 
 def render_edition_dashboard(product_data, edition_data,
                              asset_dir='/_dasher-assets'):
     """Render the edition template with data."""
+    logger = get_logger()
+    logger.debug('render_edition_dashboard')
+
     template_dir = os.path.join(os.path.dirname(__file__), 'templates')
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(template_dir),
@@ -59,6 +63,9 @@ def render_edition_dashboard(product_data, edition_data,
 def render_build_dashboard(product_data, build_data,
                            asset_dir='/_dasher-assets'):
     """Render the builds template with data."""
+    logger = get_logger()
+    logger.debug('render_build_dashboard')
+
     template_dir = os.path.join(os.path.dirname(__file__), 'templates')
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(template_dir),
