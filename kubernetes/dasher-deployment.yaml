@@ -13,7 +13,7 @@ spec:
       containers:
         - name: uwsgi
           imagePullPolicy: "Always"
-          image: "lsstsqre/ltd-dasher:latest"
+          image: "lsstsqre/ltd-dasher:20170209-4"
           ports:
             - containerPort: 3031
               name: dasher
