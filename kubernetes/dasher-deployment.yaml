@@ -17,7 +17,7 @@ spec:
           ports:
             - containerPort: 3031
               name: dasher
-          livenessProbe:
+          readinessProbe:
             httpGet:
               path: /healthz
               port: dasher
