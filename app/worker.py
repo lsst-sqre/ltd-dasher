@@ -102,12 +102,15 @@ def upload_static_assets(product_data, config):
     package_assets_dir = os.path.join(os.path.dirname(__file__),
                                       'dashboard', 'assets')
     logger.debug(package_assets_dir=package_assets_dir)
-    assert os.path.isdir(package_assets_dir)
 
     # path to the assets directory in the bucket
     bucket_path_prefix = os.path.join(product_data['slug'], '_dasher-assets')
 
     if config['TESTING'] is False:
+        # css may not necessarily be built in test environment;
+        # see http://ls.st/tac
+        assert os.path.isdir(package_assets_dir)
+
         # FIXME really want to mock upload_dir instead of flagging it
         logger.debug(assets_bucket_path_prefix=bucket_path_prefix)
         upload_dir(product_data['bucket_name'],
