@@ -1,0 +1,48 @@
+.inventory-list {
+  margin-left: 0;
+  list-style-type: none;
+}
+
+
+.inventory-list__item {
+  margin-bottom: 1em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-width: thin;
+  border-top-style: solid;
+  border-top-color: red;
+  background-color: rgb(250, 250, 250); 
+}
+
+
+.inventory-item__header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+
+.inventory-item-header__title {
+  display: block;
+  line-height: 1.0;
+  margin-bottom: 0; // override inuitcss
+}
+
+
+.inventory-item-header__date {
+  display: block;
+  height: 1.4em;
+}
+
+
+.inventory-item__metadata {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+
+.inventory-item-metadata__jira-url {
+  margin-right: 3em;
+}

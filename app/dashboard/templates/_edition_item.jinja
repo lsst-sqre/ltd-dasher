@@ -1,1 +1,26 @@
-<a href="{{ item.published_url }}">{{ item.slug }}</a>
+<article class="inventory-list__item">
+  <header class="inventory-item__header">
+    <h3 class="inventory-item-header__title">
+      <a href="{{ item.published_url }}">
+        {% if item.alt_title %}
+          {{ item.alt_title }}
+        {% else %}
+          {{ item.slug }}
+        {% endif %}
+      </a>
+    </h3>
+    <date class="inventory-item-header__date" datetime="{{ item.date_rebuilt }}">{{ item.datetime_rebuilt|simple_date }}</date>
+  </header>
+  <div class="inventory-item__metadata">
+    {% if item.jira_url %}
+      <div class="inventory-item-metadata__jira-url">
+        <span>JIRA: <a href="{{ item.jira_url }}">{{ item.jira_ticket_name }}</a></span>
+      </div>
+    {% endif %}
+    <div class="inventory-item-metadata__github-branch-box">
+      {# FIXME could have an edition with multiple branches (multi-repo products)
+      For the MVP I'm ignoring this. #}
+      <span><a href="{{ item.github_ref_url }}">View on GitHub</a></span>
+    </div>
+  </div>
+</article>

@@ -9,8 +9,7 @@
 
   <header class="dashboard-header">
     <h1 class="dashboard-header__product-name">{{ product.title }}</h1>
-
-    <p class="dashboard-header__subtitle">Editions</p>
+    <p>{{ product.published_url }}</p>
   </header>
 
 
@@ -22,7 +21,7 @@
 
     <ul class="inventory-list">
       {% for item in releases %}
-      <li class="inventory-list__item">{% include "_edition_item.jinja" %}</li>
+      <li>{% include "_edition_item.jinja" %}</li>
       {% endfor %}
     </ul>
   </section>
@@ -36,7 +35,7 @@
 
     <ul class="inventory-list">
       {% for item in recents %}
-      <li class="inventory-list__item">{% include "_edition_item.jinja" %}</li>
+      <li>{% include "_edition_item.jinja" %}</li>
       {% endfor %}
     </ul>
   </section>
@@ -50,7 +49,7 @@
 
     <ul class="inventory-list">
       {% for item in stales %}
-      <li class="inventory-list__item">{% include "_edition_item.jinja" %}</li>
+      <li>{% include "_edition_item.jinja" %}</li>
       {% endfor %}
     </ul>
   </section>

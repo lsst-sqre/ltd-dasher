@@ -2,11 +2,16 @@
 
 import os
 import datetime
+import re
 
 from structlog import get_logger
 import jinja2
 
 from .jinjafilters import filter_simple_date
+
+
+# regular expression that matches tickets/DM-N ticket branches
+TICKET_BRANCH_PATTERN = re.compile('^tickets/([A-Z]+-[0-9]+)')
 
 
 def render_edition_dashboard(product_data, edition_data,
@@ -20,6 +25,9 @@ def render_edition_dashboard(product_data, edition_data,
     # hydrate the datasets with datetime objects
     _insert_datetime(edition_data)
     _insert_age(edition_data)
+
+    _insert_github_ref_url(product_data, edition_data)
+    _insert_jira_url(edition_data)
 
     # The main edition is always a release; label it as 'Current' for
     # template presentation.
@@ -122,6 +130,37 @@ def _insert_age(dataset,
         dt = _parse_keeper_datetime(d[datetime_str_key])
         d[age_key] = datetime.datetime.now() - dt
     return dataset
+
+
+def _insert_github_ref_url(product, edition_dataset, key='github_ref_url'):
+    """Insert the GitHub branch URL for every edition.
+
+    FIXME: this is an MVP for single-repo products. This needs to be
+    re-thought for multi-repo LTD products.
+    """
+    base_repo_url = product['doc_repo'].rstrip('.git')
+    for k, d in edition_dataset.items():
+        git_ref = d['tracked_refs'][0]
+        # https://github.com/lsst-sqre/ltd-dasher/tree/tickets/DM-9023
+        url = base_repo_url + '/tree/' + git_ref
+        d[key] = url
+
+
+def _insert_jira_url(edition_dataset,
+                     url_key='jira_url', name_key='jira_ticket_name'):
+    """Insert the name and URL of a JIRA ticket associated with an edition.
+
+    FIXME: this is an MVP for single-repo products. This needs to be
+    re-thought for multi-repo LTD products.
+    """
+    for k, d in edition_dataset.items():
+        git_ref = d['tracked_refs'][0]
+        match = TICKET_BRANCH_PATTERN.search(git_ref)
+        if match is not None:
+            ticket_name = match.group(1)
+            d[name_key] = ticket_name
+            d[url_key] = 'https://jira.lsstcorp.org/browse/{0}'.format(
+                ticket_name)
 
 
 def _parse_keeper_datetime(date_string):
