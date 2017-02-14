@@ -6,6 +6,8 @@ import datetime
 from structlog import get_logger
 import jinja2
 
+from .jinjafilters import filter_simple_date
+
 
 def render_edition_dashboard(product_data, edition_data,
                              asset_dir='/_dasher-assets'):
@@ -13,11 +15,7 @@ def render_edition_dashboard(product_data, edition_data,
     logger = get_logger()
     logger.debug('render_edition_dashboard')
 
-    template_dir = os.path.join(os.path.dirname(__file__), 'templates')
-    env = jinja2.Environment(
-        loader=jinja2.FileSystemLoader(template_dir),
-        autoescape=jinja2.select_autoescape(['html'])
-    )
+    env = create_jinja_env()
 
     # hydrate the datasets with datetime objects
     _insert_datetime(edition_data)
@@ -66,11 +64,7 @@ def render_build_dashboard(product_data, build_data,
     logger = get_logger()
     logger.debug('render_build_dashboard')
 
-    template_dir = os.path.join(os.path.dirname(__file__), 'templates')
-    env = jinja2.Environment(
-        loader=jinja2.FileSystemLoader(template_dir),
-        autoescape=jinja2.select_autoescape(['html'])
-    )
+    env = create_jinja_env()
 
     # hydrate the datasets with datetime objects
     _insert_datetime(build_data, datetime_str_key='date_created')
@@ -84,6 +78,24 @@ def render_build_dashboard(product_data, build_data,
         product=product_data,
         builds=builds)
     return rendered_page
+
+
+def create_jinja_env():
+    """Create a Jinja2 `~jinja2.Environment`.
+
+    Returns
+    -------
+    env : `jinja2.Environment`
+        Jinja2 template rendering environment, configured to use templates in
+        ``templates/``.
+    """
+    template_dir = os.path.join(os.path.dirname(__file__), 'templates')
+    env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(template_dir),
+        autoescape=jinja2.select_autoescape(['html'])
+    )
+    env.filters['simple_date'] = filter_simple_date
+    return env
 
 
 def _insert_datetime(dataset,
@@ -119,11 +131,7 @@ def _parse_keeper_datetime(date_string):
 def render_development_index():
     """Render an index.html document for the root of the development builds.
     """
-    template_dir = os.path.join(os.path.dirname(__file__), 'templates')
-    env = jinja2.Environment(
-        loader=jinja2.FileSystemLoader(template_dir),
-        autoescape=jinja2.select_autoescape(['html'])
-    )
+    env = create_jinja_env()
     template = env.get_template('dev_index.jinja')
     rendered_page = template.render()
     return rendered_page
