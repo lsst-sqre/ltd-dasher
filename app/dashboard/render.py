@@ -41,28 +41,21 @@ def render_edition_dashboard(product_data, edition_data,
 
     # Extract recently-updated editions
     # Releases are never included in the development lists
-    recent_threshold = datetime.timedelta(days=7)
-    recents = []
-    stales = []
+    development_editions = []
     for _, edition in edition_data.items():
         if edition['slug'] not in release_slugs:
-            if edition['age'] <= recent_threshold:
-                recents.append(edition)
-            else:
-                stales.append(edition)
+            development_editions.append(edition)
 
     # Sort editions youngest to oldest
     releases.sort(key=lambda x: x['age'])
-    recents.sort(key=lambda x: x['age'])
-    stales.sort(key=lambda x: x['age'])
+    development_editions.sort(key=lambda x: x['age'])
 
     template = env.get_template('edition_dashboard.jinja')
     rendered_page = template.render(
         asset_dir=asset_dir,
         product=product_data,
         releases=releases,
-        recents=recents,
-        stales=stales)
+        development_editions=development_editions)
     return rendered_page
 
 

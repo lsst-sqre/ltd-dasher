@@ -27,28 +27,14 @@
   </section>
   {% endif %}
 
-  {% if recents %}
+  {% if development_editions %}
   <section class="dashboard-section">
     <header class="dashboard-section__header">
-      <h2 class="dashboard-section__title">Recent development editions</h2>
+      <h2 class="dashboard-section__title">Development editions</h2>
     </header>
 
     <ul class="inventory-list">
-      {% for item in recents %}
-      <li>{% include "_edition_item.jinja" %}</li>
-      {% endfor %}
-    </ul>
-  </section>
-  {% endif %}
-
-  {% if stales %}
-  <section class="dashboard-section">
-    <header class="dashboard-section__header">
-      <h2 class="dashboard-section__title">Stale development editions</h2>
-    </header>
-
-    <ul class="inventory-list">
-      {% for item in stales %}
+      {% for item in development_editions %}
       <li>{% include "_edition_item.jinja" %}</li>
       {% endfor %}
     </ul>
