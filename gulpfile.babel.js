@@ -19,6 +19,7 @@ const env = options.env || 'dev';
 
 const dirs = {
   scss: 'src/scss',
+  svg: 'src/svg',
   assetsDeploy: 'app/dashboard/assets',
   assetsDev: '_build/_dasher-assets',
   dev: '_build',
@@ -58,6 +59,13 @@ gulp.task('scss', () => {
     .pipe(reload());
 });
 
+gulp.task('svg', () => {
+  return gulp.src(`${dirs.svg}/lsst_underline_logo.svg`)
+    .pipe(env === 'dev' ? gulp.dest(`${dirs.assetsDev}`) : gutil.noop())
+    .pipe(env === 'deploy' ? gulp.dest(`${dirs.assetsDeploy}`) : gutil.noop())
+    .pipe(reload());
+});
+
 // Runs run.py render to create development HTML in _build
 gulp.task('html', () => {
   return run('python run.py render').exec()
@@ -77,4 +85,4 @@ gulp.task('watch', () => {
   gulp.watch(`app/dashboard/**/*.{scss,jinja}`, ['html']);
 });
 
-gulp.task('default', ['html', 'scss', 'watch', 'server']);
+gulp.task('default', ['html', 'scss', 'svg', 'watch', 'server']);
