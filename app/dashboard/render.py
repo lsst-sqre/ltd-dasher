@@ -26,8 +26,12 @@ def render_edition_dashboard(product_data, edition_data,
     _insert_datetime(edition_data)
     _insert_age(edition_data)
 
+    _insert_github_handle(product_data)
+    _insert_ci_data(product_data)
     _insert_github_ref_url(product_data, edition_data)
     _insert_jira_url(edition_data)
+
+    print(product_data)
 
     # The main edition is always a release; label it as 'Current' for
     # template presentation.
@@ -154,6 +158,34 @@ def _insert_jira_url(edition_dataset,
             d[name_key] = ticket_name
             d[url_key] = 'https://jira.lsstcorp.org/browse/{0}'.format(
                 ticket_name)
+
+
+def _insert_github_handle(product, handle_key='github_handle'):
+    """Insert a friendly GitHub handle, like ``lsst/pipelines_lsst_io``, into
+    the product dataset.
+    """
+    repo_url = product['doc_repo']
+    repo_handle = repo_url.rstrip('.git')
+    repo_handle = repo_handle.lstrip('https://github.com/')
+    product[handle_key] = repo_handle
+
+
+def _insert_ci_data(product,
+                    url_key='ci_url',
+                    name_key='ci_platform_name'):
+    """Insert the name and URL of the CI dashboard.
+
+    FIXME this is a hack; we can't assume that a product is being built
+    with Travis. Instead, this metadata needs to be given by Keeper or
+    DocHub.
+    """
+    repo_url = product['doc_repo']
+    repo_handle = repo_url.rstrip('.git')
+    repo_handle = repo_handle.lstrip('https://github.com/')
+    ci_url = 'https://travis-ci.org/{0}'.format(repo_handle)
+    ci_name = 'Travis'
+    product[url_key] = ci_url
+    product[name_key] = ci_name
 
 
 def _parse_keeper_datetime(date_string):

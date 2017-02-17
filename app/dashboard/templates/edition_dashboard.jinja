@@ -9,8 +9,15 @@
 
   <header class="dashboard-header">
     <img class="dashboard-header__logo" src="{{ asset_dir }}/lsst_underline_logo.svg" alt="Large Synoptic Survey Telescope">
+    {% if product.handle %}
+      <span class="dashboard-header__handle">{{ product.handle }}</span>
+    {% endif %}
     <h1 class="dashboard-header__product-name">{{ product.title }}</h1>
-    <p>{{ product.published_url }}</p>
+    <span class="dashboard-header__url"><a href="{{ product.published_url }}">{{ product.published_url }}</a></span>
+    <ul class="dashboard-header__link-list">
+      <li>GitHub: <a href="{{ product.doc_repo }}">{{ product.github_handle }}</a></li>
+      <li>CI: <a href="{{ product.ci_url }}">{{ product.ci_platform_name }}</a></li>
+    </ul>
   </header>
 
 
