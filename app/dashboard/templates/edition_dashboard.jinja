@@ -10,13 +10,13 @@
   <header class="dashboard-header">
     <img class="dashboard-header__logo" src="{{ asset_dir }}/lsst_underline_logo.svg" alt="Large Synoptic Survey Telescope">
     {% if product.handle %}
-      <span class="dashboard-header__handle">{{ product.handle }}</span>
+    <span class="dashboard-header__handle"><a class="hidden-link" href="{{ product.published_url }}">{{ product.handle }}</a></span>
     {% endif %}
-    <h1 class="dashboard-header__product-name">{{ product.title }}</h1>
-    <span class="dashboard-header__url"><a href="{{ product.published_url }}">{{ product.published_url }}</a></span>
+    <h1 class="dashboard-header__product-name"><a class="hidden-link" href="{{ product.published_url }}">{{ product.title }}</a></h1>
+    <span class="dashboard-header__url"><a class="hidden-link" href="{{ product.published_url }}">{{ product.published_url }}</a></span>
     <ul class="dashboard-header__link-list">
-      <li>GitHub: <a href="{{ product.doc_repo }}">{{ product.github_handle }}</a></li>
-      <li>CI: <a href="{{ product.ci_url }}">{{ product.ci_platform_name }}</a></li>
+      <li>GitHub: <a class="hidden-link" href="{{ product.doc_repo }}">{{ product.github_handle }}</a></li>
+      <li>CI: <a class="hidden-link" href="{{ product.ci_url }}">{{ product.ci_platform_name }}</a></li>
     </ul>
   </header>
 
