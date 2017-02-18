@@ -1,0 +1,21 @@
+// universal-header universal-header--dashboard
+
+.universal-header {
+  background-color: $lsst-dark-background;
+  color: #fff;
+
+  a {
+    color: #fff;
+    border-bottom: unset;
+    box-shadow: unset;
+  }
+
+  a:hover {
+    background: $lsst-bright-blue;
+  }
+}
+
+.universal-header--dashboard {
+  margin: auto;
+  max-width: 40em;
+}
