@@ -11,7 +11,7 @@
   {% include "_typekit_loader.jinja" %}
 </head>
 
-<body>
+<body class="dashboard-page">
 
   <div class="universal-header">
     <div class="universal-header--dashboard">
@@ -22,6 +22,8 @@
 
   {% block body %}
   {% endblock body %}
+
+  {% include "_footer.jinja" %}
 </body>
 
 </html>
