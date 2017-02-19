@@ -25,7 +25,7 @@
   <div class="inventory-item__metadata">
     {% if item.jira_url %}
       <div class="inventory-item-metadata__jira-url">
-        <span>JIRA: <a href="{{ item.jira_url }}">{{ item.jira_ticket_name }}</a></span>
+        <span><span class="svg-icon svg-icon--left svg-icon--jira svg-baseline"><svg><use xlink:href="#icon-jira-blue" /></svg></span> <a href="{{ item.jira_url }}">{{ item.jira_ticket_name }}</a></span>
       </div>
     {% endif %}
     <div class="inventory-item-metadata__github-branch-box">

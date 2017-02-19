@@ -84,6 +84,8 @@ gulp.task('icons', function () {
     .pipe(cheerio({
       run: function ($) {
         $('[fill]').removeAttr('fill');
+        // for JIRA icon
+        $('.st0').removeClass('st0');
       },
       parserOptions: { xmlMode: true }
     }))
