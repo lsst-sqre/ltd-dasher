@@ -8,4 +8,5 @@ body {
   @include source-sans-regular;
   @include font-size($body-font-size-px);
   line-height: $body-line-height;
+  color: $body-color;
 }
