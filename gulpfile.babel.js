@@ -5,6 +5,11 @@ import sass from 'gulp-sass';
 import autoprefixer from 'gulp-autoprefixer';
 import minifyCss from 'gulp-minify-css';
 import sourcemaps from 'gulp-sourcemaps';
+var svgstore = require('gulp-svgstore');
+var svgmin = require('gulp-svgmin');
+var cheerio = require('gulp-cheerio');
+var path = require('path');
+var rename = require('gulp-rename');
 var gutil = require('gulp-util');
 var minimist = require('minimist');
 var run = require('gulp-run');
@@ -20,7 +25,9 @@ const env = options.env || 'dev';
 const dirs = {
   scss: 'src/scss',
   svg: 'src/svg',
+  icons: 'src/icons',
   assetsDeploy: 'app/dashboard/assets',
+  templates: 'app/dashboard/templates',
   assetsDev: '_build/_dasher-assets',
   dev: '_build',
 };
@@ -66,8 +73,27 @@ gulp.task('svg', () => {
     .pipe(reload());
 });
 
+gulp.task('icons', function () {
+  return gulp
+    .src(`${dirs.icons}/**/*.svg`, { base: dirs.icons })
+    .pipe(rename(function (file) {
+      var name = file.dirname.split(path.sep);
+      name.push(file.basename);
+      file.basename = name.join('-');
+    }))
+    .pipe(cheerio({
+      run: function ($) {
+        $('[fill]').removeAttr('fill');
+      },
+      parserOptions: { xmlMode: true }
+    }))
+    .pipe(svgmin())
+    .pipe(svgstore({ inlineSvg: true }))
+    .pipe(gulp.dest(`${dirs.templates}`));
+});
+
 // Runs run.py render to create development HTML in _build
-gulp.task('html', () => {
+gulp.task('html', ['icons'], () => {
   return run('python run.py render').exec()
     .pipe(gulp.dest(`${dirs.dev}/logs`)) // makes the reload synchronous
     .pipe(reload());
@@ -85,4 +111,4 @@ gulp.task('watch', () => {
   gulp.watch(`app/dashboard/**/*.{scss,jinja}`, ['html']);
 });
 
-gulp.task('default', ['html', 'scss', 'svg', 'watch', 'server']);
+gulp.task('default', ['scss', 'svg', 'html', 'watch', 'server']);

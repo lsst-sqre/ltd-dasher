@@ -41,6 +41,8 @@ def render_edition_dashboard(product_data, edition_data,
         releases[0]['alt_title'] = 'Current'
     else:
         releases = []
+    for release in releases:
+        release['is_release'] = True
     release_slugs = [r['slug'] for r in releases]
 
     # Extract recently-updated editions

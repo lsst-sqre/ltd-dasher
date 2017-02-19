@@ -67,6 +67,8 @@
 @import 'inuitcss/objects/objects.tables';
 @import 'inuitcss/objects/objects.pack';
 
+@import 'objects/icon';
+
 
 // ===========================================================================
 // COMPONENTS
@@ -89,6 +91,6 @@
 // @import 'inuitcss/utilities/utilities.headings';
 // @import 'inuitcss/utilities/utilities.spacing';
 // @import 'inuitcss/utilities/utilities.print';
-// @import 'inuitcss/utilities/utilities.hide';
+@import 'inuitcss/utilities/utilities.hide';
 
 @import 'utilities/links';

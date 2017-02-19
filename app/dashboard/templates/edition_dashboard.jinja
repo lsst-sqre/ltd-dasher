@@ -15,8 +15,8 @@
     <h1 class="dashboard-header__product-name"><a class="hidden-link" href="{{ product.published_url }}">{{ product.title }}</a></h1>
     <span class="dashboard-header__url"><a class="hidden-link" href="{{ product.published_url }}">{{ product.domain }}</a></span>
     <ul class="dashboard-header__link-list">
-      <li>GitHub: <a class="hidden-link" href="{{ product.doc_repo }}">{{ product.github_handle }}</a></li>
-      <li>CI: <a class="hidden-link" href="{{ product.ci_url }}">{{ product.ci_platform_name }}</a></li>
+      <li><a class="hidden-link" href="{{ product.doc_repo }}"><span class="svg-icon svg-icon--left svg-baseline"><svg><use xlink:href="#octicon-mark-github" /></svg></span> {{ product.github_handle }}</a></li>
+      <li><a class="hidden-link" href="{{ product.ci_url }}"><span class="svg-icon svg-icon--left svg-baseline"><svg><use xlink:href="#octicon-server" /></svg></span> {{ product.ci_platform_name }}</a></li>
     </ul>
   </header>
 
