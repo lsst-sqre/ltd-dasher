@@ -16,7 +16,9 @@
 .inventory-item__header {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;  // needed for mobile with long edition names
   justify-content: space-between;
+  align-items: baseline;
   margin-bottom: 1rem;
 }
 
@@ -31,6 +33,7 @@
 .inventory-item-header__date {
   display: block;
   height: 1.4em;
+  margin-left: auto;  // force date to right side if wrapped (in mobile)
 }
 
 
