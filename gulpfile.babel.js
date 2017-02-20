@@ -114,3 +114,6 @@ gulp.task('watch', () => {
 });
 
 gulp.task('default', ['scss', 'svg', 'html', 'watch', 'server']);
+
+// make all assets needed for the docker image
+gulp.task('assets', ['scss', 'svg', 'icons']);
