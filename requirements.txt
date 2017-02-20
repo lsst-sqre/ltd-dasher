@@ -1,4 +1,4 @@
-ltd-conveyor==0.3.0rc2
+ltd-conveyor==0.3.0
 structlog==16.1.0
 boto3==1.4.4
 click==6.7
