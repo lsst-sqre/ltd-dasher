@@ -49,11 +49,11 @@ def render():
     cache_dir = os.path.join(test_dir, '_cache')
 
     product_data = app.dashboard.loaders.load_dataset_with_caching(
-        cache_dir, 'sqr-006', 'product')
+        cache_dir, 'sqr-013', 'product')
     edition_data = app.dashboard.loaders.load_dataset_with_caching(
-        cache_dir, 'sqr-006', 'editions')
+        cache_dir, 'sqr-013', 'editions')
     build_data = app.dashboard.loaders.load_dataset_with_caching(  # noqa: F841
-        cache_dir, 'sqr-006', 'builds')
+        cache_dir, 'sqr-013', 'builds')
 
     page_data = app.dashboard.render.render_edition_dashboard(
         product_data, edition_data)

@@ -16,6 +16,9 @@ TICKET_BRANCH_PATTERN = re.compile('^tickets/([A-Z]+-[0-9]+)')
 # regular expression that matches a document handle as a slug
 DOC_HANDLE_PATTERN = re.compile('^(sqr|dmtn|smtn|ldm|lse|lpm)-[0-9]+$')
 
+# regular express that matches version strings
+RELEASE_PATTERN = re.compile('^v\d+')
+
 SERIES_NAMES = {
     'sqr': 'SQuaRE Technical Note',
     'dmtn': 'Data Management Technical Note',
@@ -43,6 +46,7 @@ def render_edition_dashboard(product_data, edition_data,
     _insert_github_ref_url(product_data, edition_data)
     _insert_jira_url(edition_data)
     _insert_doc_handle(product_data)
+    _insert_is_release(edition_data)
 
     print(product_data)
 
@@ -50,30 +54,28 @@ def render_edition_dashboard(product_data, edition_data,
     # template presentation.
     # More work should be done on how LTD designates releases.
     if 'main' in edition_data:
-        releases = [edition_data['main']]
-        releases[0]['alt_title'] = 'Current'
-    else:
-        releases = []
-    for release in releases:
-        release['is_release'] = True
-    release_slugs = [r['slug'] for r in releases]
+        edition_data['main']['alt_title'] = 'Current'
+        edition_data['main']['is_release'] = True
 
     # Extract recently-updated editions
     # Releases are never included in the development lists
     development_editions = []
+    release_editions = []
     for _, edition in edition_data.items():
-        if edition['slug'] not in release_slugs:
+        if edition['is_release']:
+            release_editions.append(edition)
+        else:
             development_editions.append(edition)
 
     # Sort editions youngest to oldest
-    releases.sort(key=lambda x: x['age'])
+    release_editions.sort(key=lambda x: x['age'])
     development_editions.sort(key=lambda x: x['age'])
 
     template = env.get_template('edition_dashboard.jinja')
     rendered_page = template.render(
         asset_dir=asset_dir,
         product=product_data,
-        releases=releases,
+        releases=release_editions,
         development_editions=development_editions)
     return rendered_page
 
@@ -220,6 +222,24 @@ def _insert_doc_handle(product, handle_key='doc_handle',
         # remove the handle and any ": " from the title
         product['title'] = product['title'].lstrip(product[handle_key])
         product['title'] = product['title'].lstrip(': ')
+
+
+def _insert_is_release(editions,
+                       is_release_key='is_release',
+                       alt_title_key='alt_title'):
+    """Insert a field indicating whether this edition is likely a release or
+    not.
+
+    Heuristic for guessing a release: edition slug begins with `v` and a digit.
+    """
+    for k, d in editions.items():
+        git_ref = d['tracked_refs'][0]
+        match = RELEASE_PATTERN.search(git_ref)
+        if match is not None:
+            d[is_release_key] = True
+            d[alt_title_key] = git_ref
+        else:
+            d[is_release_key] = False
 
 
 def _parse_keeper_datetime(date_string):
