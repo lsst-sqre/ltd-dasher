@@ -97,7 +97,7 @@ Example::
 GET /healthz
 ------------
 
-Endpoint for a liveness probe (see ``kubernetes/dasher-deployment.yaml``).
+Endpoint for a readiness probe (see ``kubernetes/dasher-deployment.yaml``).
 Example::
 
    HTTP/1.0 200 OK
@@ -113,8 +113,14 @@ Example::
 POST /build
 -----------
 
-Triggers a dashboard build.
-This route is not yet implemented.
+Triggers a dashboard build on one or more LTD Keeper-managed products.
+
+Example request with HTTPie_::
+
+   http post http://localhost:3031/build \
+       product_urls:='["https://keeper.lsst.codes/products/developer", "https://keeper.lsst.codes/products/pipelines"]'
+
+Expected response status: ``202``.
 
 ****
 
@@ -124,3 +130,4 @@ MIT licensed open source.
 
 .. _LTD Keeper: https://ltd-keeper.lsst.io
 .. _SQR-006: https://sqr-006.lsst.io/#versioned-documentation-urls
+.. _HTTPie: https://httpie.org
