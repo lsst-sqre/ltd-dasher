@@ -45,16 +45,20 @@ Run unit tests::
 Making Docker images
 ====================
 
-Build::
+Prepare assets::
 
-   docker build -t lsstsqre/ltd-dasher .
+   gulp assets -env=deploy
+
+Build the image::
+
+   docker build -t lsstsqre/ltd-dasher:tag .
 
 **Note:** for *releases*, the image's **tag** should match both the Git tag and ``app.__version__``.
 We need to work out the continuous delivery pipeline.
 
 Push to `lsstsqre/ltd-dasher <https://hub.docker.com/r/lsstsqre/ltd-dasher/>`_ on Docker Hub::
 
-   docker push lsstsqre/ltd-dasher
+   docker push lsstsqre/ltd-dasher:tag
 
 Kubernetes deployment
 =====================
@@ -63,8 +67,8 @@ LTD Dasher needs to be deployed in the same Kubernetes cluster as `LTD Keeper`_;
 The basic deployment is::
 
    cd kubernetes
-   kubectl create -f dasher-service.yaml
-   kubectl create -f dasher-deployment.yaml
+   kubectl apply -f dasher-service.yaml
+   kubectl apply -f dasher-deployment.yaml
 
 Through the ``dasher`` service, the application is available in the cluster at::
 
