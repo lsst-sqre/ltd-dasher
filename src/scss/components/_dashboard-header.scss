@@ -11,9 +11,14 @@
 
 
 .dashboard-header__handle {
-  margin-bottom: 1em;
+  display: block;
   @include source-sans-bold;
-  @font-size: font-size(18px)
+  // font-size: 1.2rem;
+  letter-spacing: 0.0625em;
+
+  a {
+    color: $lsst-dark-background;
+  }
 }
 
 

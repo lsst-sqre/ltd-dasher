@@ -13,6 +13,18 @@ from .jinjafilters import filter_simple_date
 # regular expression that matches tickets/DM-N ticket branches
 TICKET_BRANCH_PATTERN = re.compile('^tickets/([A-Z]+-[0-9]+)')
 
+# regular expression that matches a document handle as a slug
+DOC_HANDLE_PATTERN = re.compile('^(sqr|dmtn|smtn|ldm|lse|lpm)-[0-9]+$')
+
+SERIES_NAMES = {
+    'sqr': 'SQuaRE Technical Note',
+    'dmtn': 'Data Management Technical Note',
+    'smtn': 'Simulations Technical Note',
+    'ldm': 'LSST Data Management',
+    'lse': 'LSST Systems Engineering',
+    'lpm': 'LSST Project Management',
+}
+
 
 def render_edition_dashboard(product_data, edition_data,
                              asset_dir='/_dasher-assets'):
@@ -30,6 +42,7 @@ def render_edition_dashboard(product_data, edition_data,
     _insert_ci_data(product_data)
     _insert_github_ref_url(product_data, edition_data)
     _insert_jira_url(edition_data)
+    _insert_doc_handle(product_data)
 
     print(product_data)
 
@@ -188,6 +201,25 @@ def _insert_ci_data(product,
     ci_name = 'Travis'
     product[url_key] = ci_url
     product[name_key] = ci_name
+
+
+def _insert_doc_handle(product, handle_key='doc_handle',
+                       series_name_key='series_name'):
+    """Insert the document handle, if available.
+
+    Also process the title so that the document handle is not repeated in the
+    title.
+    """
+    match = DOC_HANDLE_PATTERN.search(product['slug'])
+    if match is not None:
+        # set handle_key field only if there's a document handle;
+        # this behaviour is used by the template
+        product[handle_key] = product['slug'].upper()
+        product[series_name_key] = SERIES_NAMES[match.group(1).lower()]
+
+        # remove the handle and any ": " from the title
+        product['title'] = product['title'].lstrip(product[handle_key])
+        product['title'] = product['title'].lstrip(': ')
 
 
 def _parse_keeper_datetime(date_string):
