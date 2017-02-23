@@ -89,14 +89,18 @@ def render_build_dashboard(product_data, build_data,
     env = create_jinja_env()
 
     # hydrate the datasets with datetime objects
-    _insert_datetime(build_data, datetime_str_key='date_created')
-    _insert_age(build_data, datetime_str_key='date_created')
+    _insert_datetime(build_data,
+                     datetime_str_key='date_created',
+                     datetime_key='datetime_created')
+    _insert_age(build_data,
+                datetime_str_key='date_created')
 
     _insert_ci_data(product_data)
     _insert_doc_handle(product_data)
-    # FIXME git_ref; not tracked ref
-    # _insert_github_ref_url(product_data, build_data)
-    # _insert_jira_url(build_data)
+    _insert_github_ref_url(product_data, build_data,
+                           git_refs_key='git_refs')
+    _insert_jira_url(build_data,
+                     git_refs_key='git_refs')
 
     builds = [b for _, b in build_data.items()]
     builds.sort(key=lambda x: x['age'])
@@ -152,7 +156,9 @@ def _insert_age(dataset,
     return dataset
 
 
-def _insert_github_ref_url(product, edition_dataset, key='github_ref_url'):
+def _insert_github_ref_url(product, edition_dataset,
+                           git_refs_key='tracked_refs',
+                           key='github_ref_url'):
     """Insert the GitHub branch URL for every edition.
 
     FIXME: this is an MVP for single-repo products. This needs to be
@@ -160,13 +166,13 @@ def _insert_github_ref_url(product, edition_dataset, key='github_ref_url'):
     """
     base_repo_url = product['doc_repo'].rstrip('.git')
     for k, d in edition_dataset.items():
-        git_ref = d['tracked_refs'][0]
+        git_ref = d[git_refs_key][0]
         # https://github.com/lsst-sqre/ltd-dasher/tree/tickets/DM-9023
         url = base_repo_url + '/tree/' + git_ref
         d[key] = url
 
 
-def _insert_jira_url(edition_dataset,
+def _insert_jira_url(edition_dataset, git_refs_key='tracked_refs',
                      url_key='jira_url', name_key='jira_ticket_name'):
     """Insert the name and URL of a JIRA ticket associated with an edition.
 
@@ -174,7 +180,7 @@ def _insert_jira_url(edition_dataset,
     re-thought for multi-repo LTD products.
     """
     for k, d in edition_dataset.items():
-        git_ref = d['tracked_refs'][0]
+        git_ref = d[git_refs_key][0]
         match = TICKET_BRANCH_PATTERN.search(git_ref)
         if match is not None:
             ticket_name = match.group(1)

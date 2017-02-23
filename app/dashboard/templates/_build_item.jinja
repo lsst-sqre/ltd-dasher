@@ -1,1 +1,27 @@
-<a href="{{ item.published_url }}">{{ item.slug }}</a>
+<article class="inventory-list__item">
+  <header class="inventory-item__header">
+    <h3 class="inventory-item-header__title">
+      <a class="hidden-link hidden-link--no-hover" href="{{ item.published_url }}">
+        <span class="svg-icon svg-icon--left svg-baseline">
+          <svg><use xlink:href="#octicon-git-commit" /></svg>
+        </span>
+      </a>
+      <a href="{{ item.published_url }}">
+        {{ item.slug }}
+      </a>
+    </h3>
+    <date class="inventory-item-header__date" datetime="{{ item.date_created }}">{{ item.datetime_created|simple_date }}</date>
+  </header>
+  <div class="inventory-item__metadata">
+    {% if item.jira_url %}
+      <div class="inventory-item-metadata__jira-url">
+        <span><span class="svg-icon svg-icon--left svg-icon--jira svg-baseline"><svg><use xlink:href="#icon-jira-blue" /></svg></span> <a href="{{ item.jira_url }}">{{ item.jira_ticket_name }}</a></span>
+      </div>
+    {% endif %}
+    <div class="inventory-item-metadata__github-branch-box">
+      {# FIXME could have an edition with multiple branches (multi-repo products)
+      For the MVP I'm ignoring this. #}
+      <span><span class="svg-icon svg-icon--left svg-baseline"><svg><use xlink:href="#octicon-mark-github" /></svg></span><a href="{{ item.github_ref_url }}">View source</a></span>
+    </div>
+  </div>
+</article>
