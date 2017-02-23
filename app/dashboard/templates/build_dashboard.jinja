@@ -1,0 +1,28 @@
+{% extends "base.jinja" %}
+
+{% block page_title %}{{ product.title }}: LSST the Docs Builds{% endblock page_title %}
+{% block page_description %}Build dashboard for {{ product.published_url }}.{% endblock page_description %}
+
+{% block body %}
+
+<div class="dashboard-container">
+
+  {% include "_header.jinja" %}
+
+  {% if builds %}
+  <section class="dashboard-section">
+    <header class="dashboard-section__header">
+      <h2 class="dashboard-section__title">Builds</h2>
+    </header>
+
+    <ul class="inventory-list">
+      {% for item in builds %}
+      <li>{% include "_build_item.jinja" %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+</div>
+
+{% endblock body %}

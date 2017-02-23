@@ -40,5 +40,45 @@ def make_shell_context():
     return dict(app=dasher_app)
 
 
+@manager.command
+def render():
+    """Test rendering pipeline for development."""
+    import app
+
+    test_dir = '_build'
+    cache_dir = os.path.join(test_dir, '_cache')
+
+    product_data = app.dashboard.loaders.load_dataset_with_caching(
+        cache_dir, 'sqr-013', 'product')
+    edition_data = app.dashboard.loaders.load_dataset_with_caching(
+        cache_dir, 'sqr-013', 'editions')
+    build_data = app.dashboard.loaders.load_dataset_with_caching(  # noqa: F841
+        cache_dir, 'sqr-013', 'builds')
+
+    page_data = app.dashboard.render.render_edition_dashboard(
+        product_data, edition_data)
+    app.dashboard.render.write_html(
+        page_data,
+        os.path.join(test_dir, 'v/index.html'))
+
+    page_data = app.dashboard.render.render_build_dashboard(
+        product_data, build_data)
+    app.dashboard.render.write_html(
+        page_data,
+        os.path.join(test_dir, 'builds/index.html'))
+
+    page_data = app.dashboard.render.render_development_index()
+    app.dashboard.render.write_html(
+        page_data,
+        os.path.join(test_dir, 'index.html'))
+
+
+@manager.command
+def clean():
+    """Delete development renderings and data caches in `_build/`."""
+    import shutil
+    shutil.rmtree('_build')
+
+
 if __name__ == '__main__':
     manager.run()

@@ -87,3 +87,8 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# LTD Dasher-specific stuff
+_build
+node_modules
+app/dashboard/assets/

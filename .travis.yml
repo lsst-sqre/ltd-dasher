@@ -4,5 +4,14 @@ python:
   - '3.5'
 install:
   - pip install -r requirements.txt
+  # FIXME I'm having trouble installing npm deps with node provided by
+  # Travis; works locally
+  # - npm install --global gulp
+  # - npm install
 script:
+  # - gulp scss
   - py.test --flake8 --cov=app
+# addons:
+#   apt:
+#     packages:
+#       - nodejs

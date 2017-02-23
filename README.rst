@@ -16,6 +16,24 @@ In a Python 3.5 virtual environment, install requirements::
 
    pip install -r requirements.txt
 
+Installing ``npm`` and ``gulp`` if they're not already installed.
+For example::
+
+   brew install node
+   npm install -g gulp
+
+And install LTD Dasher's node.js dependencies::
+
+   npm install
+
+Generate a dashboard for development (written to ``_build``)::
+
+   ./run.py render
+
+Clean up the development render::
+
+   ./run.py clean
+
 Run a development server::
 
    ./run.py runserver
@@ -27,16 +45,20 @@ Run unit tests::
 Making Docker images
 ====================
 
-Build::
+Prepare assets::
 
-   docker build -t lsstsqre/ltd-dasher .
+   gulp assets -env=deploy
+
+Build the image::
+
+   docker build -t lsstsqre/ltd-dasher:tag .
 
 **Note:** for *releases*, the image's **tag** should match both the Git tag and ``app.__version__``.
 We need to work out the continuous delivery pipeline.
 
 Push to `lsstsqre/ltd-dasher <https://hub.docker.com/r/lsstsqre/ltd-dasher/>`_ on Docker Hub::
 
-   docker push lsstsqre/ltd-dasher
+   docker push lsstsqre/ltd-dasher:tag
 
 Kubernetes deployment
 =====================
@@ -45,8 +67,8 @@ LTD Dasher needs to be deployed in the same Kubernetes cluster as `LTD Keeper`_;
 The basic deployment is::
 
    cd kubernetes
-   kubectl create -f dasher-service.yaml
-   kubectl create -f dasher-deployment.yaml
+   kubectl apply -f dasher-service.yaml
+   kubectl apply -f dasher-deployment.yaml
 
 Through the ``dasher`` service, the application is available in the cluster at::
 
@@ -75,7 +97,7 @@ Example::
 GET /healthz
 ------------
 
-Endpoint for a liveness probe (see ``kubernetes/dasher-deployment.yaml``).
+Endpoint for a readiness probe (see ``kubernetes/dasher-deployment.yaml``).
 Example::
 
    HTTP/1.0 200 OK
@@ -91,8 +113,14 @@ Example::
 POST /build
 -----------
 
-Triggers a dashboard build.
-This route is not yet implemented.
+Triggers a dashboard build on one or more LTD Keeper-managed products.
+
+Example request with HTTPie_::
+
+   http post http://localhost:3031/build \
+       product_urls:='["https://keeper.lsst.codes/products/developer", "https://keeper.lsst.codes/products/pipelines"]'
+
+Expected response status: ``202``.
 
 ****
 
@@ -102,3 +130,4 @@ MIT licensed open source.
 
 .. _LTD Keeper: https://ltd-keeper.lsst.io
 .. _SQR-006: https://sqr-006.lsst.io/#versioned-documentation-urls
+.. _HTTPie: https://httpie.org

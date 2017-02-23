@@ -13,11 +13,11 @@ spec:
       containers:
         - name: uwsgi
           imagePullPolicy: "Always"
-          image: "lsstsqre/ltd-dasher:latest"
+          image: "lsstsqre/ltd-dasher:v0.1.0"
           ports:
             - containerPort: 3031
               name: dasher
-          livenessProbe:
+          readinessProbe:
             httpGet:
               path: /healthz
               port: dasher
@@ -26,3 +26,24 @@ spec:
           env:
             - name: LTD_DASHER_PROFILE
               value: production
+            - name: LTD_DASHER_AWS_ID
+              valueFrom:
+                secretKeyRef:
+                  name: dasher-secrets
+                  key: aws-id
+            - name: LTD_DASHER_AWS_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: dasher-secrets
+                  key: aws-secret
+            - name: LTD_DASHER_FASTLY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: dasher-secrets
+                  key: fastly-id
+            - name: LTD_DASHER_FASTLY_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: dasher-secrets
+                  key: fastly-key
+
