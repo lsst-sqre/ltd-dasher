@@ -15,7 +15,7 @@ from . import dashboard  # noqa: F401
 
 
 # Application version; should match Git tags and docker tags
-__version__ = '0.1.0-rc.1'
+__version__ = '0.1.0'
 
 
 def create_app(profile='production'):
