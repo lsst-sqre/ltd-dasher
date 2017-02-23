@@ -7,18 +7,20 @@
 
 <div class="dashboard-container">
 
-  <header class="dashboard-header">
-    <h1 class="dashboard-header__product-name">{{ product.title }}</h1>
-
-    <p class="dashboard-header__subtitle">Builds</p>
-  </header>
+  {% include "_header.jinja" %}
 
   {% if builds %}
-  <ul class="inventory-list">
-    {% for item in builds %}
-    <li class="inventory-list__item">{% include "_build_item.jinja" %}</li>
-    {% endfor %}
-  </ul>
+  <section class="dashboard-section">
+    <header class="dashboard-section__header">
+      <h2 class="dashboard-section__title">Builds</h2>
+    </header>
+
+    <ul class="inventory-list">
+      {% for item in builds %}
+      <li class="inventory-list__item">{% include "_build_item.jinja" %}</li>
+      {% endfor %}
+    </ul>
+  </section>
   {% endif %}
 
 </div>

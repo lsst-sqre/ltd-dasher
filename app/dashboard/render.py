@@ -92,6 +92,12 @@ def render_build_dashboard(product_data, build_data,
     _insert_datetime(build_data, datetime_str_key='date_created')
     _insert_age(build_data, datetime_str_key='date_created')
 
+    _insert_ci_data(product_data)
+    _insert_doc_handle(product_data)
+    # FIXME git_ref; not tracked ref
+    # _insert_github_ref_url(product_data, build_data)
+    # _insert_jira_url(build_data)
+
     builds = [b for _, b in build_data.items()]
     builds.sort(key=lambda x: x['age'])
     template = env.get_template('build_dashboard.jinja')
