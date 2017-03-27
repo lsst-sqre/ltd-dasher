@@ -16,9 +16,13 @@ TICKET_BRANCH_PATTERN = re.compile('^tickets/([A-Z]+-[0-9]+)')
 # regular expression that matches a document handle as a slug
 DOC_HANDLE_PATTERN = re.compile('^(sqr|dmtn|smtn|ldm|lse|lpm)-[0-9]+$')
 
-# regular express that matches version strings
+# regular expression that matches version strings
 RELEASE_PATTERN = re.compile('^v\d+')
 
+# regular expression for extracting a handle-less title from a title string
+TITLE_PATTERN = re.compile('^((?:SQR|DMTN|SMTN|LDM|LSE|LPM)-[0-9]+)(?::)?(?:\s)?(.+)$')  # noqa: E501
+
+# map of series handles to descriptive names
 SERIES_NAMES = {
     'sqr': 'SQuaRE Technical Note',
     'dmtn': 'Data Management Technical Note',
@@ -47,8 +51,7 @@ def render_edition_dashboard(product_data, edition_data,
     _insert_jira_url(edition_data)
     _insert_doc_handle(product_data)
     _insert_is_release(edition_data)
-
-    print(product_data)
+    _normalize_product_title(product_data)
 
     # The main edition is always a release; label it as 'Current' for
     # template presentation.
@@ -101,6 +104,7 @@ def render_build_dashboard(product_data, build_data,
                            git_refs_key='git_refs')
     _insert_jira_url(build_data,
                      git_refs_key='git_refs')
+    _normalize_product_title(product_data)
 
     builds = [b for _, b in build_data.items()]
     builds.sort(key=lambda x: x['age'])
@@ -231,9 +235,13 @@ def _insert_doc_handle(product, handle_key='doc_handle',
         product[handle_key] = product['slug'].upper()
         product[series_name_key] = SERIES_NAMES[match.group(1).lower()]
 
-        # remove the handle and any ": " from the title
-        product['title'] = product['title'].lstrip(product[handle_key])
-        product['title'] = product['title'].lstrip(': ')
+
+def _normalize_product_title(product):
+    """Remove the handle prefix from a product title, if present."""
+    # remove the handle and any ": " from the title
+    m = TITLE_PATTERN.match(product['title'])
+    if m is not None:
+        product['title'] = m.group(2)
 
 
 def _insert_is_release(editions,

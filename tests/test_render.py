@@ -1,23 +1,36 @@
-from app.dashboard.render import _insert_doc_handle
+import pytest
+from app.dashboard.render import (_insert_doc_handle,
+                                  _normalize_product_title)
 
 
-def test_doc_handle():
+@pytest.mark.parametrize(
+    'slug,expected_handle,expected_series_name',
+    [('sqr-000', 'SQR-000', 'SQuaRE Technical Note'),
+     ('dmtn-000', 'DMTN-000', 'Data Management Technical Note')])
+def test_doc_handle(slug, expected_handle, expected_series_name):
     product = {
-        'slug': 'sqr-000',
-        'title': 'SQR-000: This is the real title'
+        'slug': slug,
     }
 
     _insert_doc_handle(product)
-    assert product['title'] == 'This is the real title'
-    assert product['doc_handle'] == 'SQR-000'
+    assert product['doc_handle'] == expected_handle
+    assert product['series_name'] == expected_series_name
 
 
-def test_no_handle():
+@pytest.mark.parametrize(
+    'title,expected_title',
+    [('SQR-000: This is the real title',
+      'This is the real title'),
+     ('SQR-000: Starts with an S',
+      'Starts with an S'),
+     ('SQR-000 Starts with an S',
+      'Starts with an S'),
+     ('Starts with an S',
+      'Starts with an S')])
+def test_product_title(title, expected_title):
     product = {
-        'slug': 'developer',
-        'title': 'DM Developer Guide'
+        'title': title
     }
 
-    _insert_doc_handle(product)
-    assert product['title'] == 'DM Developer Guide'
-    assert 'doc_handle' not in product
+    _normalize_product_title(product)
+    assert product['title'] == expected_title
