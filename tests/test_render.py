@@ -25,10 +25,13 @@ def test_doc_handle(slug, expected_handle, expected_series_name):
       'Starts with an S'),
      ('SQR-000 Starts with an S',
       'Starts with an S'),
+     ('SQR-001 Starts with an S',
+      'SQR-001 Starts with an S'),
      ('Starts with an S',
       'Starts with an S')])
 def test_product_title(title, expected_title):
     product = {
+        'doc_handle': 'SQR-000',
         'title': title
     }
 

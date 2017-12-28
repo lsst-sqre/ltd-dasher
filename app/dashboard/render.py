@@ -14,13 +14,10 @@ from .jinjafilters import filter_simple_date
 TICKET_BRANCH_PATTERN = re.compile('^tickets/([A-Z]+-[0-9]+)')
 
 # regular expression that matches a document handle as a slug
-DOC_HANDLE_PATTERN = re.compile('^(sqr|dmtn|smtn|ldm|lse|lpm)-[0-9]+$')
+DOC_HANDLE_PATTERN = re.compile('^(sqr|dmtn|smtn|ldm|lse|lpm|dmtr)-[0-9]+$')
 
 # regular expression that matches version strings
 RELEASE_PATTERN = re.compile('^v\d+')
-
-# regular expression for extracting a handle-less title from a title string
-TITLE_PATTERN = re.compile('^((?:SQR|DMTN|SMTN|LDM|LSE|LPM)-[0-9]+)(?::)?(?:\s)?(.+)$')  # noqa: E501
 
 # map of series handles to descriptive names
 SERIES_NAMES = {
@@ -30,6 +27,7 @@ SERIES_NAMES = {
     'ldm': 'LSST Data Management',
     'lse': 'LSST Systems Engineering',
     'lpm': 'LSST Project Management',
+    'dmtr': 'Data Management Test Report',
 }
 
 
@@ -238,10 +236,10 @@ def _insert_doc_handle(product, handle_key='doc_handle',
 
 def _normalize_product_title(product):
     """Remove the handle prefix from a product title, if present."""
-    # remove the handle and any ": " from the title
-    m = TITLE_PATTERN.match(product['title'])
-    if m is not None:
-        product['title'] = m.group(2)
+    if 'doc_handle' in product:
+        if product['title'].startswith(product['doc_handle']):
+            product['title'] = product['title'][len(product['doc_handle']):]
+    product['title'] = product['title'].strip(': ')
 
 
 def _insert_is_release(editions,
