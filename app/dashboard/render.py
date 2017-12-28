@@ -14,7 +14,7 @@ from .jinjafilters import filter_simple_date
 TICKET_BRANCH_PATTERN = re.compile('^tickets/([A-Z]+-[0-9]+)')
 
 # regular expression that matches a document handle as a slug
-DOC_HANDLE_PATTERN = re.compile('^(sqr|dmtn|smtn|ldm|lse|lpm)-[0-9]+$')
+DOC_HANDLE_PATTERN = re.compile('^(sqr|dmtn|smtn|ldm|lse|lpm|dmtr)-[0-9]+$')
 
 # regular expression that matches version strings
 RELEASE_PATTERN = re.compile('^v\d+')
@@ -27,6 +27,7 @@ SERIES_NAMES = {
     'ldm': 'LSST Data Management',
     'lse': 'LSST Systems Engineering',
     'lpm': 'LSST Project Management',
+    'dmtr': 'Data Management Test Report',
 }
 
 
