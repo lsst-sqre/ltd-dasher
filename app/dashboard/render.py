@@ -168,7 +168,14 @@ def _insert_github_ref_url(product, edition_dataset,
     """
     base_repo_url = product['doc_repo'].rstrip('.git')
     for k, d in edition_dataset.items():
-        git_ref = d[git_refs_key][0]
+        # Editions that don't use the git_refs tracking mode will have
+        # tracked_refs equal to None.
+        try:
+            git_ref = d[git_refs_key][0]
+        except TypeError:
+            # None is not indexable
+            continue
+
         # https://github.com/lsst-sqre/ltd-dasher/tree/tickets/DM-9023
         url = base_repo_url + '/tree/' + git_ref
         d[key] = url
@@ -182,7 +189,14 @@ def _insert_jira_url(edition_dataset, git_refs_key='tracked_refs',
     re-thought for multi-repo LTD products.
     """
     for k, d in edition_dataset.items():
-        git_ref = d[git_refs_key][0]
+        # Editions that don't use the git_refs tracking mode will have
+        # tracked_refs equal to None.
+        try:
+            git_ref = d[git_refs_key][0]
+        except TypeError:
+            # None is not indexable
+            continue
+
         match = TICKET_BRANCH_PATTERN.search(git_ref)
         if match is not None:
             ticket_name = match.group(1)
@@ -251,11 +265,11 @@ def _insert_is_release(editions,
     Heuristic for guessing a release: edition slug begins with `v` and a digit.
     """
     for k, d in editions.items():
-        git_ref = d['tracked_refs'][0]
-        match = RELEASE_PATTERN.search(git_ref)
+        slug = d['slug']
+        match = RELEASE_PATTERN.search(slug)
         if match is not None:
             d[is_release_key] = True
-            d[alt_title_key] = git_ref
+            d[alt_title_key] = slug
         else:
             d[is_release_key] = False
 

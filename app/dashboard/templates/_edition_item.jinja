@@ -28,10 +28,12 @@
         <span><span class="svg-icon svg-icon--left svg-icon--jira svg-baseline"><svg><use xlink:href="#icon-jira-blue" /></svg></span> <a href="{{ item.jira_url }}">{{ item.jira_ticket_name }}</a></span>
       </div>
     {% endif %}
+    {% if item.github_ref_url %}
     <div class="inventory-item-metadata__github-branch-box">
       {# FIXME could have an edition with multiple branches (multi-repo products)
       For the MVP I'm ignoring this. #}
       <span><span class="svg-icon svg-icon--left svg-baseline"><svg><use xlink:href="#octicon-mark-github" /></svg></span><a href="{{ item.github_ref_url }}">View source</a></span>
     </div>
+    {% endif %}
   </div>
 </article>
