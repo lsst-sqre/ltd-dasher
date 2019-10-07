@@ -1,10 +1,13 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dasher-deployment
+  name: dasher
 
 spec:
   replicas: 2
+  selector:
+    matchLabels:
+      name: dasher
   template:
     metadata:
       labels:
@@ -29,21 +32,20 @@ spec:
             - name: LTD_DASHER_AWS_ID
               valueFrom:
                 secretKeyRef:
-                  name: dasher-secrets
+                  name: keeper
                   key: aws-id
             - name: LTD_DASHER_AWS_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: dasher-secrets
+                  name: keeper
                   key: aws-secret
             - name: LTD_DASHER_FASTLY_ID
               valueFrom:
                 secretKeyRef:
-                  name: dasher-secrets
+                  name: keeper
                   key: fastly-id
             - name: LTD_DASHER_FASTLY_KEY
               valueFrom:
                 secretKeyRef:
-                  name: dasher-secrets
+                  name: keeper
                   key: fastly-key
-
