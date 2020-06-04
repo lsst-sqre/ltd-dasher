@@ -2,6 +2,15 @@
 Change log
 ##########
 
+0.1.5 (2020-06-04)
+==================
+
+- Removed the Travis CI link from dashboards.
+  Since we're now using multiple CI services, we can no longer reasonably assume a single CI service.
+  This feature could be re-added in the future once the LTD Keeper API is expanded to include more metadata about individual products and their editions.
+
+- Updated the asset build pipeline to Gulp 4.
+
 0.1.4 (2019-10-6)
 =================
 
