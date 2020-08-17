@@ -11,13 +11,13 @@ from .jinjafilters import filter_simple_date
 
 
 # regular expression that matches tickets/DM-N ticket branches
-TICKET_BRANCH_PATTERN = re.compile('^tickets/([A-Z]+-[0-9]+)')
+TICKET_BRANCH_PATTERN = re.compile(r'^tickets/([A-Z]+-[0-9]+)')
 
 # regular expression that matches a document handle as a slug
-DOC_HANDLE_PATTERN = re.compile('^(sqr|dmtn|smtn|ldm|lse|lpm|dmtr)-[0-9]+$')
+DOC_HANDLE_PATTERN = re.compile(r'^(sqr|dmtn|smtn|ldm|lse|lpm|dmtr)-[0-9]+$')
 
 # regular expression that matches version strings
-RELEASE_PATTERN = re.compile('^v\d+')
+RELEASE_PATTERN = re.compile(r'^v\d+')
 
 # map of series handles to descriptive names
 SERIES_NAMES = {
