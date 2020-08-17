@@ -172,7 +172,7 @@ def _insert_github_ref_url(product, edition_dataset,
         # tracked_refs equal to None.
         try:
             git_ref = d[git_refs_key][0]
-        except TypeError:
+        except (TypeError, IndexError):
             # None is not indexable
             continue
 
@@ -193,7 +193,7 @@ def _insert_jira_url(edition_dataset, git_refs_key='tracked_refs',
         # tracked_refs equal to None.
         try:
             git_ref = d[git_refs_key][0]
-        except TypeError:
+        except (TypeError, IndexError):
             # None is not indexable
             continue
 
