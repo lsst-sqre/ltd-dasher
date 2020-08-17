@@ -11,13 +11,13 @@ from .jinjafilters import filter_simple_date
 
 
 # regular expression that matches tickets/DM-N ticket branches
-TICKET_BRANCH_PATTERN = re.compile('^tickets/([A-Z]+-[0-9]+)')
+TICKET_BRANCH_PATTERN = re.compile(r'^tickets/([A-Z]+-[0-9]+)')
 
 # regular expression that matches a document handle as a slug
-DOC_HANDLE_PATTERN = re.compile('^(sqr|dmtn|smtn|ldm|lse|lpm|dmtr)-[0-9]+$')
+DOC_HANDLE_PATTERN = re.compile(r'^(sqr|dmtn|smtn|ldm|lse|lpm|dmtr)-[0-9]+$')
 
 # regular expression that matches version strings
-RELEASE_PATTERN = re.compile('^v\d+')
+RELEASE_PATTERN = re.compile(r'^v\d+')
 
 # map of series handles to descriptive names
 SERIES_NAMES = {
@@ -172,7 +172,7 @@ def _insert_github_ref_url(product, edition_dataset,
         # tracked_refs equal to None.
         try:
             git_ref = d[git_refs_key][0]
-        except TypeError:
+        except (TypeError, IndexError):
             # None is not indexable
             continue
 
@@ -193,7 +193,7 @@ def _insert_jira_url(edition_dataset, git_refs_key='tracked_refs',
         # tracked_refs equal to None.
         try:
             git_ref = d[git_refs_key][0]
-        except TypeError:
+        except (TypeError, IndexError):
             # None is not indexable
             continue
 
@@ -210,8 +210,8 @@ def _insert_github_handle(product, handle_key='github_handle'):
     the product dataset.
     """
     repo_url = product['doc_repo']
-    repo_handle = repo_url.rstrip('.git')
-    repo_handle = repo_handle.lstrip('https://github.com/')
+    repo_handle = _strip_suffix(repo_url, '.git')
+    repo_handle = _strip_prefix(repo_handle, 'https://github.com/')
     product[handle_key] = repo_handle
 
 
@@ -225,8 +225,8 @@ def _insert_ci_data(product,
     DocHub.
     """
     repo_url = product['doc_repo']
-    repo_handle = repo_url.rstrip('.git')
-    repo_handle = repo_handle.lstrip('https://github.com/')
+    repo_handle = _strip_suffix(repo_url, '.git')
+    repo_handle = _strip_prefix(repo_handle, 'https://github.com/')
     ci_url = 'https://travis-ci.org/{0}'.format(repo_handle)
     ci_name = 'Travis'
     product[url_key] = ci_url
@@ -272,6 +272,20 @@ def _insert_is_release(editions,
             d[alt_title_key] = slug
         else:
             d[is_release_key] = False
+
+
+def _strip_prefix(string, prefix):
+    if string.startswith(prefix):
+        return string[len(prefix):]
+    else:
+        return string
+
+
+def _strip_suffix(string, suffix):
+    if string.endswith(suffix):
+        return string[:-len(suffix)]
+    else:
+        return string
 
 
 def _parse_keeper_datetime(date_string):

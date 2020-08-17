@@ -2,6 +2,18 @@
 Change log
 ##########
 
+0.1.7 (2020-08-17)
+==================
+
+- Fixes for edge cases with LTD products that don't have Git refs information.
+- Better processing of GitHub URLs.
+- Refresh dependencies for:
+
+  - Flask
+  - Jinja2
+  - uWSGI
+  - requests
+
 0.1.5 (2020-06-04)
 ==================
 
