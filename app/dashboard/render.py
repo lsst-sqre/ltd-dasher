@@ -210,8 +210,8 @@ def _insert_github_handle(product, handle_key='github_handle'):
     the product dataset.
     """
     repo_url = product['doc_repo']
-    repo_handle = repo_url.rstrip('.git')
-    repo_handle = repo_handle.lstrip('https://github.com/')
+    repo_handle = _strip_suffix(repo_url, '.git')
+    repo_handle = _strip_prefix(repo_handle, 'https://github.com/')
     product[handle_key] = repo_handle
 
 
@@ -225,8 +225,8 @@ def _insert_ci_data(product,
     DocHub.
     """
     repo_url = product['doc_repo']
-    repo_handle = repo_url.rstrip('.git')
-    repo_handle = repo_handle.lstrip('https://github.com/')
+    repo_handle = _strip_suffix(repo_url, '.git')
+    repo_handle = _strip_prefix(repo_handle, 'https://github.com/')
     ci_url = 'https://travis-ci.org/{0}'.format(repo_handle)
     ci_name = 'Travis'
     product[url_key] = ci_url
@@ -272,6 +272,20 @@ def _insert_is_release(editions,
             d[alt_title_key] = slug
         else:
             d[is_release_key] = False
+
+
+def _strip_prefix(string, prefix):
+    if string.startswith(prefix):
+        return string[len(prefix):]
+    else:
+        return string
+
+
+def _strip_suffix(string, suffix):
+    if string.endswith(suffix):
+        return string[:-len(suffix)]
+    else:
+        return string
 
 
 def _parse_keeper_datetime(date_string):
