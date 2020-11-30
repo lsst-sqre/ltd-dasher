@@ -2,6 +2,12 @@
 Change log
 ##########
 
+0.1.8 (2020-11-30)
+==================
+
+- Faster dashboard builds using the new ``GET /products/:product/dashboard`` metadata endpoint that's available in LTD Keeper 1.21.0.
+  Since metadata can be retrieved from a single request, dashboards for projects with large numbers of editions and builds are built much more quickly.
+
 0.1.7 (2020-08-17)
 ==================
 

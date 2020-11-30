@@ -4,11 +4,12 @@ import os
 
 import boto3
 from structlog import get_logger
+from requests.exceptions import HTTPError
 from ltdconveyor import (upload_dir, upload_object,
                          create_dir_redirect_object, purge_key)
 
 from .dashboard.loaders import (load_product_data, load_edition_data,
-                                load_build_data)
+                                load_build_data, load_bulk_dashboard_data)
 from .dashboard.render import (render_edition_dashboard,
                                render_build_dashboard)
 
@@ -38,9 +39,14 @@ def build_dashboard_for_product(product_url, config):
     assert config['FASTLY_SERVICE_ID'] is not None
 
     # Get data from the Keeper API
-    product_data = load_product_data(product_url)
-    edition_data = load_edition_data(product_url)
-    build_data = load_build_data(product_url)
+    try:
+        product_data, edition_data, build_data = load_bulk_dashboard_data(
+            product_url
+        )
+    except HTTPError:
+        product_data = load_product_data(product_url)
+        edition_data = load_edition_data(product_url)
+        build_data = load_build_data(product_url)
 
     # absolute URL for asset directory
     asset_dir = product_data['published_url'] + '/_dasher-assets'

@@ -97,10 +97,51 @@ mock_build_1324_data = {
     "uploaded": True
 }
 
+mock_bulk_data = {
+    "product": mock_product_data,
+    "editions": [
+        mock_edition_388_data,
+        mock_edition_390_data
+    ],
+    "builds": [
+        mock_build_1322_data,
+        mock_build_1324_data
+    ]
+}
+
 
 @responses.activate
 def test_rebuild_dashboards(anon_client):
-    """Test dashboard rebuilds with full client."""
+    """Test dashboard rebuilds with full client using new bulk metadata
+    endpoint.
+    """
+    responses.add(
+        responses.GET,
+        'https://keeper-staging.lsst.codes/products/test-059/dashboard',
+        json=mock_bulk_data,
+        status=200,
+        content_type='application/json')
+
+    r = anon_client.post(
+        '/build',
+        {
+            'product_urls': ['https://keeper-staging.lsst.codes/'
+                             'products/test-059']
+        }
+    )
+    assert r.status == 202
+
+
+@responses.activate
+def test_rebuild_dashboards_oldstyle(anon_client):
+    """Test dashboard rebuilds with full client using original endpoints."""
+    responses.add(
+        responses.GET,
+        'https://keeper-staging.lsst.codes/products/test-059/dashboard',
+        json={},
+        status=404,
+        content_type='application/json')
+
     responses.add(
         responses.GET,
         'https://keeper-staging.lsst.codes/products/test-059',

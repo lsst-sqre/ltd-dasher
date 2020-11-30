@@ -7,6 +7,26 @@ import requests
 from structlog import get_logger
 
 
+def load_bulk_dashboard_data(product_url):
+    bulk_url = "%s/dashboard" % product_url
+
+    logger = get_logger()
+    logger.info("Getting data from bulk endpoint", url=bulk_url)
+
+    r = requests.get(bulk_url)
+    r.raise_for_status()
+
+    data = r.json()
+
+    product_data = data['product']
+    edition_data = {e['slug']: e for e in data['editions']}
+    build_data = {b['slug']: b for b in data['builds']}
+
+    logger.info("Finished getting data from bulk endpoint", url=bulk_url)
+
+    return product_data, edition_data, build_data
+
+
 def load_product_data(product_url):
     """Retrieve data about the product and its editions from the Keeper API.
 
