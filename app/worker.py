@@ -29,7 +29,7 @@ def build_dashboard_for_product(product_url, config):
     config : `flask.config`
         Flask configuration.
     """
-    logger = get_logger()
+    logger = get_logger("ltddasher")
     logger.debug('build_dashboard_for_product', product_url=product_url)
 
     # Sanity check that configs exist
@@ -101,7 +101,7 @@ def upload_static_assets(product_data, config):
     compiled by the Gulp workflow. It would be good to script the Docker
     image build process to ensure that asserts and compiled and installed.
     """
-    logger = get_logger()
+    logger = get_logger("ltddasher")
     logger.debug("upload_static_assets")
 
     # local filesystem path
@@ -146,7 +146,7 @@ def upload_html_data(html_data, relative_path, product_data, config):
     config : `flask.config`
         Flask configuration.
     """
-    logger = get_logger()
+    logger = get_logger("ltddasher")
     logger.debug('upload_html_data', upload_path=relative_path)
 
     surrogate_key = product_data['surrogate_key']

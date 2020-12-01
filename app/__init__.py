@@ -30,7 +30,7 @@ def create_app(profile='production'):
     # init_app configuration hook is used for logging/structlog setup
     config[profile].init_app(app)
 
-    logger = get_logger()
+    logger = get_logger("ltddasher")
     logger.debug('Starting LTD Dasher')
 
     # register blueprints
