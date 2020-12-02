@@ -3,7 +3,7 @@ kind: Kustomization
 
 images:
   - name: lsstsqre/ltd-dasher
-    newTag: 0.1.9
+    newTag: 0.1.10
 
 resources:
   - dasher-deployment.yaml

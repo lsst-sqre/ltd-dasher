@@ -53,7 +53,7 @@ jobs:
         run: npm install .
 
       - name: Create assets
-        run: gulp assets -env=deploy
+        run: gulp assets --env=deploy
 
       - name: Build the runtime Docker image
         run: |
