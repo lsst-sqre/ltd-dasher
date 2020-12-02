@@ -2,6 +2,11 @@
 Change log
 ##########
 
+0.1.10 (2020-12-02)
+===================
+
+- Fix gulp build configuration for Docker image.
+
 0.1.9 (2020-12-01)
 ==================
 
