@@ -31,9 +31,21 @@ class Config(object):
         """
         # Implements structured logging to stdout with key-value formatting
         handler = logging.StreamHandler(sys.stdout)
-        root_logger = logging.getLogger()
+        root_logger = logging.getLogger("ltddasher")
         root_logger.addHandler(handler)
         root_logger.setLevel(logging.DEBUG)
+
+        boto_logger = logging.getLogger("boto3")
+        boto_logger.addHandler(logging.StreamHandler(sys.stdout))
+        boto_logger.setLevel(logging.WARNING)
+
+        botocore_logger = logging.getLogger("botocore")
+        botocore_logger.addHandler(logging.StreamHandler(sys.stdout))
+        botocore_logger.setLevel(logging.WARNING)
+
+        requests_logger = logging.getLogger("requests")
+        requests_logger.addHandler(logging.StreamHandler(sys.stdout))
+        requests_logger.setLevel(logging.WARNING)
 
         structlog.configure(
             processors=[
@@ -89,10 +101,23 @@ class ProductionConfig(Config):
         """Initialization hook called during create_app."""
         # Same as default logging config, except we use JSON and
         # stick to INFO log levels.
+        # Implements structured logging to stdout with key-value formatting
         handler = logging.StreamHandler(sys.stdout)
-        root_logger = logging.getLogger()
+        root_logger = logging.getLogger("ltddasher")
         root_logger.addHandler(handler)
         root_logger.setLevel(logging.INFO)
+
+        boto_logger = logging.getLogger("boto3")
+        boto_logger.addHandler(logging.StreamHandler(sys.stdout))
+        boto_logger.setLevel(logging.WARNING)
+
+        botocore_logger = logging.getLogger("botocore")
+        botocore_logger.addHandler(logging.StreamHandler(sys.stdout))
+        botocore_logger.setLevel(logging.WARNING)
+
+        requests_logger = logging.getLogger("requests")
+        requests_logger.addHandler(logging.StreamHandler(sys.stdout))
+        requests_logger.setLevel(logging.WARNING)
 
         structlog.configure(
             processors=[

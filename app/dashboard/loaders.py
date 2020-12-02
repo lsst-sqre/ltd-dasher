@@ -10,7 +10,7 @@ from structlog import get_logger
 def load_bulk_dashboard_data(product_url):
     bulk_url = "%s/dashboard" % product_url
 
-    logger = get_logger()
+    logger = get_logger("ltddasher")
     logger.info("Getting data from bulk endpoint", url=bulk_url)
 
     r = requests.get(bulk_url)
@@ -53,14 +53,14 @@ def load_product_data(product_url):
     #     "slug": "developer",
     #     "title": "DM Developer Guide"
     # }
-    logger = get_logger()
+    logger = get_logger("ltddasher")
     logger = logger.debug('load_product_data')
     r = requests.get(product_url)
     return r.json()
 
 
 def load_edition_data(product_url):
-    """Retrieve all edition resources for a particular product from the
+    r"""Retrieve all edition resources for a particular product from the
     Keeper API.
 
     Parameters
@@ -75,7 +75,7 @@ def load_edition_data(product_url):
         Dictionary keyed by edition slug, containing `dict`\ s of edition
         data.
     """
-    logger = get_logger()
+    logger = get_logger("ltddasher")
     logger = logger.debug('load_edition_data')
 
     edition_root_url = product_url + '/editions/'
@@ -106,7 +106,7 @@ def load_edition_data(product_url):
 
 
 def load_build_data(product_url):
-    logger = get_logger()
+    logger = get_logger("ltddasher")
     logger = logger.debug('load_build_data')
 
     build_root_url = product_url + '/builds/'

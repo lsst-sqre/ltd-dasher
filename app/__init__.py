@@ -15,7 +15,7 @@ from . import dashboard  # noqa: F401
 
 
 # Application version; should match Git tags and docker tags
-__version__ = '0.1.8'
+__version__ = '0.1.9'
 
 
 def create_app(profile='production'):
@@ -30,7 +30,7 @@ def create_app(profile='production'):
     # init_app configuration hook is used for logging/structlog setup
     config[profile].init_app(app)
 
-    logger = get_logger()
+    logger = get_logger("ltddasher")
     logger.debug('Starting LTD Dasher')
 
     # register blueprints

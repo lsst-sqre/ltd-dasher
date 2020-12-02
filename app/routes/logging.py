@@ -15,7 +15,7 @@ def log_route(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         # new() creates a new logging context
-        logger = get_logger().new()
+        logger = get_logger("ltddasher").new()
         # bind information about request that appears in all
         logger = logger.bind(request_id=str(uuid.uuid4()),
                              method=request.method,

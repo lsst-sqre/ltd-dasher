@@ -2,6 +2,11 @@
 Change log
 ##########
 
+0.1.9 (2020-12-01)
+==================
+
+- Improve logging by reducing the verbosity of logging from third-party dependencies.
+
 0.1.8 (2020-11-30)
 ==================
 
