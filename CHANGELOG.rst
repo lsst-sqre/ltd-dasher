@@ -2,6 +2,11 @@
 Change log
 ##########
 
+0.1.11 (2021-10-04)
+===================
+
+- Update docker base image to Python 3.9 and refresh dependencies.
+
 0.1.10 (2020-12-02)
 ===================
 
