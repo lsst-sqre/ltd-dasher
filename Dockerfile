@@ -1,4 +1,4 @@
-FROM python:3.5.1
+FROM python:3.9.6-slim-buster AS base-image
 
 MAINTAINER Jonathan Sick <jsick@lsst.org>
 
