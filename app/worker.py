@@ -5,8 +5,9 @@ import os
 import boto3
 from structlog import get_logger
 from requests.exceptions import HTTPError
-from ltdconveyor import (upload_dir, upload_object,
-                         create_dir_redirect_object, purge_key)
+from ltdconveyor.s3 import (upload_dir, upload_object,
+                            create_dir_redirect_object)
+from ltdconveyor.fastly import purge_key
 
 from .dashboard.loaders import (load_product_data, load_edition_data,
                                 load_build_data, load_bulk_dashboard_data)
