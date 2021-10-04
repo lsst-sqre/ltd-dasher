@@ -2,6 +2,8 @@ FROM python:3.9.6-slim-buster AS base-image
 
 MAINTAINER Jonathan Sick <jsick@lsst.org>
 
+RUN apt-get update && apt-get -y upgrade && apt-get -y install --no-install-recommends git build-essential
+
 ENV APPDIR /ltd-dasher
 COPY . $APPDIR/
 WORKDIR $APPDIR
