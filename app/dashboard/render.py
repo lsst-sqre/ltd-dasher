@@ -304,7 +304,7 @@ def render_development_index():
 def write_html(page_data, path):
     """Write a rendered HTML template to the file system (for development)."""
     dirname = os.path.dirname(path)
-    if dirname is not '' and not os.path.isdir(dirname):
+    if dirname != '' and not os.path.isdir(dirname):
         os.makedirs(dirname, exist_ok=True)
     with open(path, 'w') as f:
         f.write(page_data)
